@@ -142,6 +142,7 @@ public class ToolsFiles {
         try {
             return Files.readAllBytes(Paths.get(patch));
         } catch (Exception e) {
+            Debug.log("file patch: " + new File(patch).getAbsolutePath());
             throw new RuntimeException(e);
         }
     }
