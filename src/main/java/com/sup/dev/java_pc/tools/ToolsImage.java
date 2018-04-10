@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.tools;
 
 
+import com.sup.dev.java.libs.debug.Debug;
 import com.sup.dev.java.tools.ToolsColor;
 
 import javax.imageio.ImageIO;
@@ -92,6 +93,8 @@ public class ToolsImage {
         }
     }
 
+
+
     public static boolean checkImageScaleUnknownType(byte[] img, int w, int h) {
         return checkImageScaleUnknownType(img, w, h, true, true, true);
     }
@@ -122,6 +125,39 @@ public class ToolsImage {
         int[] imgScale = getImgScale(suffix, img);
         return imgScale[0] == w && imgScale[1] == h;
     }
+
+    public static boolean checkImageMaxScaleUnknownType(byte[] img, int w, int h) {
+        return checkImageMaxScaleUnknownType(img, w, h, true, true, true);
+    }
+
+    public static boolean checkImageMaxScaleUnknownType(byte[] img, int w, int h, boolean png, boolean gif, boolean jpg) {
+        if (png && isPNG(img))
+            return checkImageMaxScalePNG(img, w, h);
+        else if (gif && isGIF(img))
+            return checkImageMaxScaleGIF(img, w, h);
+        else if (jpg)
+            return checkImageMaxScaleJPG(img, w, h);
+        throw new IllegalArgumentException("Unknown Img type");
+    }
+
+    public static boolean checkImageMaxScaleJPG(byte[] img, int w, int h) {
+        return checkImageMaxScalePNG("jpg", img, w, h);
+    }
+
+    public static boolean checkImageMaxScaleGIF(byte[] img, int w, int h) {
+        return checkImageMaxScalePNG("gif", img, w, h);
+    }
+
+    public static boolean checkImageMaxScalePNG(byte[] img, int w, int h) {
+        return checkImageMaxScalePNG("png", img, w, h);
+    }
+
+    private static boolean checkImageMaxScalePNG(String suffix, byte[] img, int w, int h) {
+        int[] imgScale = getImgScale(suffix, img);
+        return imgScale[0] <= w && imgScale[1] <= h;
+    }
+
+
 
 
     public static boolean checkImageScaleHaARD(byte[] img, int w, int h) {
