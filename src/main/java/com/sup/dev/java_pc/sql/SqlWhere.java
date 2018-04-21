@@ -130,23 +130,20 @@ public class SqlWhere extends Sql {
 
         private final String column;
         private final boolean not;
-        private final int count;
-
         private Object[] values;
 
-
-        public WhereIN(String column, boolean not, int count) {
-            this(column, "AND", not, count);
+        public WhereIN(String column, Object... values) {
+            this(column, "AND", false, values);
         }
 
-        public WhereIN(String column, String link, boolean not, int count) {
+        public WhereIN(String column, boolean not, Object... values) {
+            this(column, "AND", not, values);
+        }
+
+        public WhereIN(String column, String link, boolean not, Object... values) {
             super(link);
-            this.count = count;
             this.column = column;
             this.not = not;
-        }
-
-        public void setValues(Object... values) {
             this.values = values;
         }
 
@@ -156,12 +153,9 @@ public class SqlWhere extends Sql {
             if (not)
                 s += "not " + s;
             s = column + " " + s;
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < values.length; i++) {
                 if (i > 0) s += ",";
-                if (values != null && values.length > i)
-                    s += values[i];
-                else
-                    s += "?";
+                s += values[i];
             }
             return s + ")";
         }
