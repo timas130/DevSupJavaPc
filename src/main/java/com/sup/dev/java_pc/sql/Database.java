@@ -37,6 +37,13 @@ public class Database extends Sql {
     //  Insert
     //
 
+    public static long insertSalient(SqlQueryInsert query, Object... values) {
+        SALIENT = true;
+        long v = insert(query, values);
+        SALIENT = false;
+        return v;
+    }
+
     public static long insert(SqlQueryInsert query, Object... values) {
         execute(query.getQuery(), values);
         ResultRows result = select(selectLastInsert, 1);
