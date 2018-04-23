@@ -43,33 +43,5 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="mysql-connector-java-5.1.39-bin" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="protobuf-java-2.6.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="xpp3-1.1.4c" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="commons-logging-1.1.1" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="google-api-client-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="google-http-client-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="google-http-client-jackson2-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="google-oauth-client-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="gson-2.1" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="httpclient-4.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="httpcore-4.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="jackson-core-2.1.3" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="javax.mail" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="jsr305-1.3.9" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="mysql-connector-java-5.1.39-bin" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="protobuf-java-2.6.1" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="xpp3-1.1.4c" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="commons-logging-1.1.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="google-api-client-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="google-http-client-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="google-http-client-jackson2-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="google-oauth-client-1.22.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="gson-2.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="httpclient-4.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="httpcore-4.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="jackson-core-2.1.3" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="javax.mail" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="jsr305-1.3.9" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="mysql-connector-java-5.1.39-bin" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="protobuf-java-2.6.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="xpp3-1.1.4c" level="project" />
   </component>
 </module>
