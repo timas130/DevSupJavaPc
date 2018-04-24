@@ -4,7 +4,7 @@ package com.sup.dev.java_pc.views.fields;
 import com.sup.dev.java.classes.callbacks.list.CallbacksList1;
 import com.sup.dev.java.classes.callbacks.simple.Callback;
 import com.sup.dev.java.classes.callbacks.simple.Callback1;
-import com.sup.dev.java.classes.providers.ProviderArg;
+import com.sup.dev.java.classes.providers.Provider1;
 import com.sup.dev.java.tools.ToolsText;
 import com.sup.dev.java_pc.views.GUI;
 
@@ -23,8 +23,8 @@ public class Logic implements MouseListener {
     private final CallbacksList1<String> onChanged = new CallbacksList1<>();
     private final JTextComponent textComponent;
 
-    private ProviderArg<String, Boolean> filter;
-    private ProviderArg<String, Boolean> errorChecker;
+    private Provider1<String, Boolean> filter;
+    private Provider1<String, Boolean> errorChecker;
     private Callback localOnTextChanged;
     private String hint = "";
     private int w;
@@ -120,7 +120,7 @@ public class Logic implements MouseListener {
         setOnChangedErrorChecker(String::isEmpty);
     }
 
-    public void setOnChangedErrorChecker(ProviderArg<String, Boolean> onChanged) {
+    public void setOnChangedErrorChecker(Provider1<String, Boolean> onChanged) {
         addOnChanged(source -> setErrorState(onChanged.provide(source)));
     }
 
@@ -128,7 +128,7 @@ public class Logic implements MouseListener {
         this.onChanged.add(onChanged);
     }
 
-    public void setFilter(ProviderArg<String, Boolean> filter) {
+    public void setFilter(Provider1<String, Boolean> filter) {
         this.filter = filter;
     }
 
@@ -156,7 +156,7 @@ public class Logic implements MouseListener {
         textComponent.setPreferredSize(new Dimension(w, (textComponent.getFontMetrics(textComponent.getFont()).getHeight() + 4) * lines + 12));
     }
 
-    public void setErrorChecker(ProviderArg<String, Boolean> errorChecker) {
+    public void setErrorChecker(Provider1<String, Boolean> errorChecker) {
         this.errorChecker = errorChecker;
     }
 

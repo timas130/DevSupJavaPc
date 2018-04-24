@@ -3,7 +3,7 @@ package com.sup.dev.java_pc.views.table.cells;
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
 import com.sup.dev.java.classes.callbacks.simple.Callback1;
-import com.sup.dev.java.classes.providers.ProviderArg;
+import com.sup.dev.java.classes.providers.Provider1;
 import com.sup.dev.java.libs.json.Json;
 import com.sup.dev.java_pc.views.GUI;
 import com.sup.dev.java_pc.views.fields.ZFieldSelect;
@@ -92,7 +92,7 @@ public class ZTableCellSelect extends ZTableCell {
     }
 
     @Override
-    public void setOnChangedErrorChecker(ProviderArg<String, Boolean> checker) {
+    public void setOnChangedErrorChecker(Provider1<String, Boolean> checker) {
         field.setOnChangedErrorChecker(checker);
     }
 

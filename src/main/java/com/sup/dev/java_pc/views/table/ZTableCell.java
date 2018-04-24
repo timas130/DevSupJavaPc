@@ -1,7 +1,7 @@
 package com.sup.dev.java_pc.views.table;
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
-import com.sup.dev.java.classes.providers.ProviderArg;
+import com.sup.dev.java.classes.providers.Provider1;
 import com.sup.dev.java.libs.json.Json;
 
 import java.awt.*;
@@ -90,7 +90,7 @@ public abstract class ZTableCell {
         this.index = index;
     }
 
-    public void setOnChangedErrorChecker(ProviderArg<String, Boolean> checker) {
+    public void setOnChangedErrorChecker(Provider1<String, Boolean> checker) {
 
     }
 

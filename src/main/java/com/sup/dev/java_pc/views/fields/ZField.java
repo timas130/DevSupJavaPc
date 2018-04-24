@@ -2,7 +2,7 @@ package com.sup.dev.java_pc.views.fields;
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
 import com.sup.dev.java.classes.callbacks.simple.Callback1;
-import com.sup.dev.java.classes.providers.ProviderArg;
+import com.sup.dev.java.classes.providers.Provider1;
 import com.sup.dev.java_pc.views.GUI;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public class ZField extends JTextField implements Field{
         logic.setErrorIfEmpty();
     }
 
-    public void setOnChangedErrorChecker(ProviderArg<String, Boolean> onChanged) {
+    public void setOnChangedErrorChecker(Provider1<String, Boolean> onChanged) {
         logic.setOnChangedErrorChecker(onChanged);
     }
 
@@ -43,7 +43,7 @@ public class ZField extends JTextField implements Field{
         logic.addOnChanged(onChanged);
     }
 
-    public void setFilter(ProviderArg<String, Boolean> filter) {
+    public void setFilter(Provider1<String, Boolean> filter) {
         logic.setFilter(filter);
     }
 
@@ -90,7 +90,7 @@ public class ZField extends JTextField implements Field{
         logic.setOnlyNumDouble();
     }
 
-    public void setErrorChecker(ProviderArg<String, Boolean> errorChecker) {
+    public void setErrorChecker(Provider1<String, Boolean> errorChecker) {
         logic.setErrorChecker(errorChecker);
     }
 
