@@ -1,6 +1,6 @@
 package com.sup.dev.java_pc.views.widgets;
 
-import com.sup.dev.java.classes.callbacks.simple.CallbackSource;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java_pc.views.GUI;
 
 import java.awt.*;
@@ -11,7 +11,7 @@ public class ZCheckBox extends ZButton{
     private static final Color DEACTIVATED = GUI.WHITE;
 
     private boolean isChecked;
-    private CallbackSource<Boolean> onCheckChange;
+    private Callback1<Boolean> onCheckChange;
 
     public ZCheckBox(){
         this("");
@@ -45,7 +45,7 @@ public class ZCheckBox extends ZButton{
         if(onCheckChange != null)onCheckChange.callback(isChecked);
     }
 
-    public void setOnCheckChange(CallbackSource<Boolean> onCheckChange) {
+    public void setOnCheckChange(Callback1<Boolean> onCheckChange) {
         this.onCheckChange = onCheckChange;
     }
 

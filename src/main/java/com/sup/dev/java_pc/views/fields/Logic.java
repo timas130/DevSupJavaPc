@@ -1,9 +1,9 @@
 package com.sup.dev.java_pc.views.fields;
 
 
-import com.sup.dev.java.classes.callbacks.list.CallbacksListSource;
+import com.sup.dev.java.classes.callbacks.list.CallbacksList1;
 import com.sup.dev.java.classes.callbacks.simple.Callback;
-import com.sup.dev.java.classes.callbacks.simple.CallbackSource;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java.classes.providers.ProviderArg;
 import com.sup.dev.java.tools.ToolsText;
 import com.sup.dev.java_pc.views.GUI;
@@ -20,7 +20,7 @@ public class Logic implements MouseListener {
 
     public static final Color COLOR_ERROR = GUI.RED_500;
 
-    private final CallbacksListSource<String> onChanged = new CallbacksListSource<>();
+    private final CallbacksList1<String> onChanged = new CallbacksList1<>();
     private final JTextComponent textComponent;
 
     private ProviderArg<String, Boolean> filter;
@@ -124,7 +124,7 @@ public class Logic implements MouseListener {
         addOnChanged(source -> setErrorState(onChanged.provide(source)));
     }
 
-    public void addOnChanged(CallbackSource<String> onChanged) {
+    public void addOnChanged(Callback1<String> onChanged) {
         this.onChanged.add(onChanged);
     }
 

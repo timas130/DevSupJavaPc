@@ -2,7 +2,7 @@ package com.sup.dev.java_pc.views.table.cells;
 
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
-import com.sup.dev.java.classes.callbacks.simple.CallbackSource;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java.classes.providers.ProviderArg;
 import com.sup.dev.java.libs.json.Json;
 import com.sup.dev.java_pc.views.GUI;
@@ -72,7 +72,7 @@ public class ZTableCellSelect extends ZTableCell {
       setOnSelect(source -> onSelect.callback());
     }
 
-    public void setOnSelect(CallbackSource onSelect){
+    public void setOnSelect(Callback1 onSelect){
         field.setOnSelect(onSelect);
     }
 

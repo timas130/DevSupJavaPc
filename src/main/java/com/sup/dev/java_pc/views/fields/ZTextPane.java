@@ -2,7 +2,7 @@ package com.sup.dev.java_pc.views.fields;
 
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
-import com.sup.dev.java.classes.callbacks.simple.CallbackSource;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java.classes.providers.ProviderArg;
 import com.sup.dev.java_pc.views.GUI;
 
@@ -64,7 +64,7 @@ public class ZTextPane extends JScrollPane{
         logic.setOnChangedErrorChecker(onChanged);
     }
 
-    public void setOnChanged(CallbackSource<String> onChanged) {
+    public void setOnChanged(Callback1<String> onChanged) {
         logic.addOnChanged(onChanged);
     }
 

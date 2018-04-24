@@ -1,8 +1,8 @@
 package com.sup.dev.java_pc.views.fields;
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
-import com.sup.dev.java.classes.callbacks.simple.CallbackSource;
-import com.sup.dev.java.classes.items.Pair;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
+import com.sup.dev.java.classes.items.Item2;
 import com.sup.dev.java_pc.views.GUI;
 import com.sup.dev.java_pc.tools.ToolsGui;
 import com.sup.dev.java_pc.views.widgets.ZMenuItem;
@@ -18,11 +18,11 @@ import java.util.List;
 
 public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListener {
 
-    private final List<Pair<String, K>> values = new ArrayList<>();
-    private final List<Pair<String, K>> selected = new ArrayList<>();
+    private final List<Item2<String, K>> values = new ArrayList<>();
+    private final List<Item2<String, K>> selected = new ArrayList<>();
 
     private Callback onShow;
-    private CallbackSource<K> onSelect;
+    private Callback1<K> onSelect;
     private K lastSelect;
     private boolean canShowError;
 
@@ -68,7 +68,7 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
 
 
     public K getSelected() {
-        for (Pair<String, K> v : values)
+        for (Item2<String, K> v : values)
             if (v.left.equals(getText()))
                 return v.right;
         return null;
@@ -93,12 +93,12 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
     }
 
     public void addValue(String mask, K v) {
-        values.add(new Pair<>(mask, v));
+        values.add(new Item2<>(mask, v));
     }
 
     public ArrayList<K> getValues() {
         ArrayList<K> l = new ArrayList<>();
-        for (Pair<String, K> v : values)
+        for (Item2<String, K> v : values)
             l.add(v.right);
         return l;
     }
@@ -119,12 +119,12 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
 
         selected.clear();
 
-        for (Pair<String, K> v : values)
+        for (Item2<String, K> v : values)
             if (v.left.toLowerCase().startsWith(getText().toLowerCase()))
                 selected.add(v);
 
         int added = selected.size();
-        for (Pair<String, K> v : selected)
+        for (Item2<String, K> v : selected)
             zPopup.add(new ZMenuItem(v.left, t -> {
                 setText(t);
                 updateSelect();
@@ -132,7 +132,7 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
                 repaint();
             }));
 
-        for (Pair<String, K> v : values)
+        for (Item2<String, K> v : values)
             if (v.left.toLowerCase().contains(getText().toLowerCase())
                     && v.left.length() >= getText().length()
                     && !selected.contains(v))
@@ -159,7 +159,7 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
         this.onShow = onShow;
     }
 
-    public void setOnSelect(CallbackSource<K> onSelect) {
+    public void setOnSelect(Callback1<K> onSelect) {
         this.onSelect = onSelect;
     }
 

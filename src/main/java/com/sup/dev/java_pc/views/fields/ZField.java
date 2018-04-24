@@ -1,7 +1,7 @@
 package com.sup.dev.java_pc.views.fields;
 
 import com.sup.dev.java.classes.callbacks.simple.Callback;
-import com.sup.dev.java.classes.callbacks.simple.CallbackSource;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java.classes.providers.ProviderArg;
 import com.sup.dev.java_pc.views.GUI;
 
@@ -39,7 +39,7 @@ public class ZField extends JTextField implements Field{
         logic.setOnChangedErrorChecker(onChanged);
     }
 
-    public void addOnChanged(CallbackSource<String> onChanged) {
+    public void addOnChanged(Callback1<String> onChanged) {
         logic.addOnChanged(onChanged);
     }
 
