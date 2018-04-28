@@ -69,8 +69,8 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
 
     public K getSelected() {
         for (Item2<String, K> v : values)
-            if (v.left.equals(getText()))
-                return v.right;
+            if (v.a1.equals(getText()))
+                return v.a2;
         return null;
     }
 
@@ -99,7 +99,7 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
     public ArrayList<K> getValues() {
         ArrayList<K> l = new ArrayList<>();
         for (Item2<String, K> v : values)
-            l.add(v.right);
+            l.add(v.a2);
         return l;
     }
 
@@ -120,12 +120,12 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
         selected.clear();
 
         for (Item2<String, K> v : values)
-            if (v.left.toLowerCase().startsWith(getText().toLowerCase()))
+            if (v.a1.toLowerCase().startsWith(getText().toLowerCase()))
                 selected.add(v);
 
         int added = selected.size();
         for (Item2<String, K> v : selected)
-            zPopup.add(new ZMenuItem(v.left, t -> {
+            zPopup.add(new ZMenuItem(v.a1, t -> {
                 setText(t);
                 updateSelect();
                 transferFocus();
@@ -133,13 +133,13 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
             }));
 
         for (Item2<String, K> v : values)
-            if (v.left.toLowerCase().contains(getText().toLowerCase())
-                    && v.left.length() >= getText().length()
+            if (v.a1.toLowerCase().contains(getText().toLowerCase())
+                    && v.a1.length() >= getText().length()
                     && !selected.contains(v))
                 selected.add(v);
 
         for (int i = added; i < selected.size(); i++)
-            zPopup.add(new ZMenuItem(selected.get(i).left, t -> {
+            zPopup.add(new ZMenuItem(selected.get(i).a1, t -> {
                 setText(t);
                 updateSelect();
                 transferFocus();
@@ -189,7 +189,7 @@ public class ZFieldSelect<K> extends ZField implements KeyListener, FocusListene
             return;
 
         if (e.getKeyCode() == 10) {
-            setText(selected.get(0).left);
+            setText(selected.get(0).a1);
             updateSelect();
             transferFocus();
             repaint();
