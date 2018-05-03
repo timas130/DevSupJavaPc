@@ -1,7 +1,5 @@
 package com.sup.dev.java_pc.google;
 
-
-import com.sup.dev.java.app.SupJava;
 import com.sup.dev.java.libs.debug.Debug;
 import com.sup.dev.java.libs.json.Json;
 
@@ -9,16 +7,25 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class GoogleNotification {
 
-    private static String serverKey;
+    private final String serverKey;
+    private final ThreadPoolExecutor threadPool;
 
-    public static void init(String serverKey) {
-        GoogleNotification.serverKey = serverKey;
+    public GoogleNotification(String serverKey) {
+        this.serverKey = serverKey;
+        threadPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
     }
 
-    public static void sendData(String message, String tokenId) {
+    public void sendData(String message, String tokenId) {
+        threadPool.execute(() -> sendDataNow(message, tokenId));
+    }
+
+    public void sendDataNow(String message, String tokenId) {
 
         try {
 
