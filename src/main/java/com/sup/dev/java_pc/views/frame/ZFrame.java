@@ -1,7 +1,6 @@
 package com.sup.dev.java_pc.views.frame;
 
 import com.sup.dev.java.tools.ToolsThreads;
-import com.sup.dev.java.utils.interfaces.ToolsThreads;
 import com.sup.dev.java_pc.views.GUI;
 import com.sup.dev.java_pc.views.panels.ZFogPanel;
 import com.sup.dev.java_pc.views.panels.ZTitlePanel;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 
 public class ZFrame extends JFrame {
 
-    private final ToolsThreads ToolsThreads = new ToolsThreads(null);
     public static ZFrame instance;
 
     private final ZTitleBar bar;
