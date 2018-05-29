@@ -70,8 +70,12 @@ public class Sql {
     }
 
     public static String increment(String column) {
-        return column +"="+column+"+1";
+        return column + "=" + column + "+1";
     }
 
+    public static long parseSum(Object o) {
+        if (o == null) return 0;
+        else return Long.parseLong(o + "");
+    }
 
 }
