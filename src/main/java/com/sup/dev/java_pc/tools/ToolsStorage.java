@@ -1,5 +1,7 @@
 package com.sup.dev.java_pc.tools;
 
+import com.sup.dev.java.tools.ToolsFiles;
+
 import java.io.*;
 
 public class ToolsStorage {
