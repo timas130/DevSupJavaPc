@@ -1,59 +1,79 @@
 package com.sup.dev.java_pc.google;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java.libs.debug.Debug;
 import com.sup.dev.java.libs.json.Json;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class GoogleNotification {
 
-    private final String serverKey;
-    private final ThreadPoolExecutor threadPool;
+    private static final ThreadPoolExecutor threadPool;
 
-    public GoogleNotification(String serverKey) {
-        this.serverKey = serverKey;
+    private static Callback1<String> onTokenNotFound;
+
+    static  {
         threadPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
     }
 
-    public void sendData(String message, String tokenId) {
-        threadPool.execute(() -> sendDataNow(message, tokenId));
+    public static void send(String message, String tokenId) {
+        threadPool.execute(() -> sendNow(message, tokenId));
     }
 
-    public void sendDataNow(String message, String tokenId) {
+    public static void sendNow(String message, String token) {
 
         try {
 
-            URL url = new URL("https://fcm.googleapis.com/fcm/send");
-            HttpURLConnection conn;
-            conn = (HttpURLConnection) url.openConnection();
+            Json jsonRoot =
+                    new Json()
+                            .put("message", new Json()
+                                    .put("token", token)
+                                    .put("data", new Json()
+                                            .put("my_data", message))
+                                    .put("android", new Json()
+                                            .put("priority", "high")));
+
+
+            GoogleCredential googleCredential = GoogleCredential
+                    .fromStream(new FileInputStream(new File("service-account.json")))
+                    .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+            googleCredential.refreshToken();
+            String accessToken = googleCredential.getAccessToken();
+
+            URL url = new URL("https://fcm.googleapis.com/v1/projects/beward-818a8/messages:send");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+            conn.setRequestProperty("Content-Type", "application/json; UTF-8");
+            conn.setRequestMethod("POST");
             conn.setUseCaches(false);
             conn.setDoInput(true);
             conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "key=" + serverKey);
-            conn.setRequestProperty("Content-Type", "application/json");
-
-            Json jsonMessage = new Json();
-            Json jsonData = new Json();
-
-            jsonData.put("my_data", message);
-
-            jsonMessage.put("to", tokenId);
-            jsonMessage.put("data", jsonData);
 
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(jsonMessage.toString());
+            wr.write(jsonRoot.toString());
             wr.flush();
 
             int status = conn.getResponseCode();
-            if (status != 200)
+
+            if (status == 404 && onTokenNotFound != null)
+                onTokenNotFound.callback(token);
+            else if (status != 200) {
                 Debug.log("Google notification sending error. code = " + status);
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                while (br.ready()) Debug.log(br.readLine());
+            }
 
         } catch (IOException ex) {
             Debug.log(ex);
@@ -61,4 +81,7 @@ public class GoogleNotification {
 
     }
 
+    public static void onTokenNotFound(Callback1<String> onTokenNotFound) {
+        GoogleNotification.onTokenNotFound = onTokenNotFound;
+    }
 }
