@@ -28,8 +28,8 @@ public class GoogleNotification {
         threadPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
     }
 
-    public static void send(String message, String tokenId) {
-        threadPool.execute(() -> sendNow(message, tokenId));
+    public static void send(String message, String token) {
+        threadPool.execute(() -> sendNow(message, token));
     }
 
     public static void sendNow(String message, String token) {
