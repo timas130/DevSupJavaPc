@@ -65,8 +65,8 @@ public class Database extends Sql {
             return select;
         } catch (SQLException e) {
             if(!SALIENT) {
-                Debug.log(query.getQuery());
-                Debug.log(values == null ? "values = null" : values);
+                Debug.print(query.getQuery());
+                Debug.print(values == null ? "values = null" : values);
             }
             throw new RuntimeException(e);
         }
@@ -81,8 +81,8 @@ public class Database extends Sql {
             return select;
         } catch (SQLException e) {
             if(!SALIENT) {
-                Debug.log(query);
-                Debug.log(Debug.asString(values));
+                Debug.print(query);
+                Debug.print(Debug.asString(values));
             }
             throw new RuntimeException(e);
         }
@@ -105,8 +105,8 @@ public class Database extends Sql {
             return new ResultRows(list.size() / columnsCount, list);
         } catch (SQLException e) {
             if(!SALIENT) {
-                Debug.log(query.getQuery());
-                Debug.log(query.getValues());
+                Debug.print(query.getQuery());
+                Debug.print(query.getValues());
             }
             throw new RuntimeException(e);
         }
@@ -125,8 +125,8 @@ public class Database extends Sql {
             return count;
         } catch (SQLException e) {
             if(!SALIENT) {
-                Debug.log(query.getQuery());
-                Debug.log(values);
+                Debug.print(query.getQuery());
+                Debug.print(values);
             }
             throw new RuntimeException(e);
         }
@@ -144,8 +144,8 @@ public class Database extends Sql {
             preparedQuery.closeIfNeed();
         } catch (SQLException e) {
             if(!SALIENT) {
-                Debug.log(query.getQuery());
-                Debug.log(values);
+                Debug.print(query.getQuery());
+                Debug.print(values);
             }
             throw new RuntimeException(e);
         }
@@ -164,8 +164,8 @@ public class Database extends Sql {
             preparedQuery.closeIfNeed();
         } catch (SQLException e) {
             if(!SALIENT) {
-                Debug.log(query);
-                Debug.log(values);
+                Debug.print(query);
+                Debug.print(values);
             }
             throw new RuntimeException(e);
         }

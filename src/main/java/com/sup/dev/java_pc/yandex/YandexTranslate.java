@@ -19,7 +19,7 @@ public class YandexTranslate {
     }
 
     public String translate(String targetLang, String input) throws IOException {
-        Debug.log(targetLang, input);
+        Debug.print(targetLang, input);
         String urlStr = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180417T025628Z.c947d37bbba4cd90.5441a8db317dd6d5dd48210958933cda684e01ea";
         URL urlObj = new URL(urlStr);
         HttpsURLConnection connection = (HttpsURLConnection) urlObj.openConnection();
@@ -36,7 +36,7 @@ public class YandexTranslate {
             return json.substring(start + 2, end - 1);
         }catch (IOException e){
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            while (br.ready()) Debug.log(br.readLine());
+            while (br.ready()) Debug.print(br.readLine());
             throw e;
         }
 

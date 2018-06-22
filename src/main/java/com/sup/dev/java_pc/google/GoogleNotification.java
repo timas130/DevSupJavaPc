@@ -69,9 +69,9 @@ public class GoogleNotification {
             if (status == 404 && onTokenNotFound != null)
                 onTokenNotFound.callback(token);
             else if (status != 200) {
-                Debug.log("Google notification sending error. code = " + status);
+                Debug.print("Google notification sending error. code = " + status);
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                while (br.ready()) Debug.log(br.readLine());
+                while (br.ready()) Debug.print(br.readLine());
             }
 
         } catch (IOException ex) {
