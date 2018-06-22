@@ -45,14 +45,13 @@ public class GoogleNotification {
                                     .put("android", new Json()
                                             .put("priority", "high")));
 
-
             GoogleCredential googleCredential = GoogleCredential
                     .fromStream(new FileInputStream(new File("service-account.json")))
                     .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
             googleCredential.refreshToken();
             String accessToken = googleCredential.getAccessToken();
 
-            URL url = new URL("https://fcm.googleapis.com/v1/projects/beward-818a8/messages:send");
+            URL url = new URL("https://fcm.googleapis.com/v1/projects/communitymc-c51a5/messages:send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization", "Bearer " + accessToken);
             conn.setRequestProperty("Content-Type", "application/json; UTF-8");
