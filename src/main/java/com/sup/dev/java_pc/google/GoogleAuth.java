@@ -39,6 +39,7 @@ public class GoogleAuth {
                 return null;
             }
         } catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
+            Debug.log(e);
             return null;
         }
     }
