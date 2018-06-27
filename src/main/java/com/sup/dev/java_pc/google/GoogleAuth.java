@@ -28,18 +28,9 @@ public class GoogleAuth {
         if (googleId != null) return googleId;
 
         Json json = requestTokenInfo(token);
-        Debug.log("===================");
-        Debug.log(json);
-        Debug.log("===================");
-        Debug.log("sub "+json.get("sub"));
-        Debug.log("azp "+json.get("azp"));
-        Debug.log("aud "+json.get("aud"));
-        Debug.log("===================");
         if(!verify(json) || !json.containsKey("sub"))return null;
-        Debug.log("xxx 1");
 
         googleId = json.getString("sub");
-        Debug.log("xxx 2 " + googleId);
         cash.put(token, googleId);
         return googleId;
 
@@ -48,7 +39,7 @@ public class GoogleAuth {
 
     private static boolean verify(Json tokenJson){
         if(tokenJson.containsKey("azp") && tokenJson.getString("azp").equals(apiKey))return true;
-        if(tokenJson.containsKey("aud") && tokenJson.getString("azp").equals(apiKey))return true;
+        if(tokenJson.containsKey("aud") && tokenJson.getString("aud").equals(apiKey))return true;
         return false;
     }
 
