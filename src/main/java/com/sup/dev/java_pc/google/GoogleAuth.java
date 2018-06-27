@@ -1,14 +1,18 @@
 package com.sup.dev.java_pc.google;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.sup.dev.java.classes.collections.Cash;
 import com.sup.dev.java.libs.debug.Debug;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class GoogleAuth {
@@ -17,10 +21,10 @@ public class GoogleAuth {
     private static GoogleIdTokenVerifier verifier;
 
     public static void init(String apiKey) {
-        verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+
+        verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance())
                 .setAudience(Collections.singletonList(apiKey))
                 .build();
-
         cash = new Cash<>(10000);
     }
 
@@ -49,6 +53,16 @@ public class GoogleAuth {
         } catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
             Debug.log(e);
             return null;
+        }
+    }
+
+    private static class GoogleAuthorizationCodeTokenV4Request extends GoogleAuthorizationCodeTokenRequest {
+
+
+        public GoogleAuthorizationCodeTokenV4Request(HttpTransport transport, JsonFactory jsonFactory, String clientId, String
+                clientSecret, String code, String redirectUri) {
+            super(transport, jsonFactory, "https://www.googleapis.com/oauth2/v4/token", clientId, clientSecret,
+                    code, redirectUri);
         }
     }
 
