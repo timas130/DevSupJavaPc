@@ -72,16 +72,9 @@ public class GoogleAuth {
                             .openConnection().getInputStream(), Charset.forName("UTF-8")));
 
             // read information into a string buffer :
-            StringBuffer b = new StringBuffer();
-            String inputLine;
-            int x = 0;
-            while ((inputLine = in.readLine()) != null) {
-                b.append(inputLine + "\n");
-                x++;
-            }
-            Debug.log("Read " + x);
+            while (in.ready()) Debug.log(in.readLine());
 
-            return inputLine;
+            return "";
 
             // exception handling :
         } catch (MalformedURLException e) {
