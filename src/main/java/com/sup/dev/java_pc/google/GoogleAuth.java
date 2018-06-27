@@ -30,14 +30,14 @@ public class GoogleAuth {
         if (googleId != null) return googleId;
         try {
             GoogleIdToken gToken = verifier.verify(token);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
-            Debug.log("G TOKEN == " +gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
+            Debug.log("G TOKEN == " + gToken);
             if (gToken != null) {
                 GoogleIdToken.Payload payload = gToken.getPayload();
                 googleId = payload.getSubject();
