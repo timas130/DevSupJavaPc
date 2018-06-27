@@ -40,7 +40,7 @@ public class GoogleAuth {
     public static String getGoogleId(String token) {
 
         Debug.log("======================================================");
-        String s = getMapFromGoogleTokenString("228261836960-j18jrn4acuq1vev19nnl8bjoie4735r7.apps.googleusercontent.com");
+        String s = getMapFromGoogleTokenString(token);
         Debug.log("G TOKEN == " + s);
         Debug.log("======================================================");
 
