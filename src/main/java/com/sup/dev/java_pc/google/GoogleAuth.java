@@ -39,13 +39,10 @@ public class GoogleAuth {
 
     public static String getGoogleId(String token) {
 
-        String s = getMapFromGoogleTokenString(token);
+        Debug.log("======================================================");
+        String s = getMapFromGoogleTokenString("228261836960-j18jrn4acuq1vev19nnl8bjoie4735r7.apps.googleusercontent.com");
         Debug.log("G TOKEN == " + s);
-        Debug.log("G TOKEN == " + s);
-        Debug.log("G TOKEN == " + s);
-        Debug.log("G TOKEN == " + s);
-        Debug.log("G TOKEN == " + s);
-        Debug.log("G TOKEN == " + s);
+        Debug.log("======================================================");
 
 
         String googleId = cash.get(token);
@@ -66,7 +63,7 @@ public class GoogleAuth {
         }
     }
 
-    private static String getMapFromGoogleTokenString(final String idTokenString){
+    private static String getMapFromGoogleTokenString(final String idTokenString) {
         BufferedReader in = null;
         try {
             // get information from token by contacting the google_token_verify_tool url :
@@ -77,26 +74,29 @@ public class GoogleAuth {
             // read information into a string buffer :
             StringBuffer b = new StringBuffer();
             String inputLine;
-            while ((inputLine = in.readLine()) != null){
+            int x = 0;
+            while ((inputLine = in.readLine()) != null) {
                 b.append(inputLine + "\n");
+                x++;
             }
+            Debug.log("Read " + x);
 
-           return inputLine;
+            return inputLine;
 
             // exception handling :
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Debug.log(e);
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch(Exception e){
+            Debug.log(e);
+        } catch (Exception e) {
             System.out.println("\n\n\tFailed to transform json to string\n");
-            e.printStackTrace();
-        } finally{
-            if(in!=null){
+            Debug.log(e);
+        } finally {
+            if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Debug.log(e);
                 }
             }
         }
@@ -104,44 +104,44 @@ public class GoogleAuth {
     }
 
     // chack the "email_verified" and "email" values in token payload
-    private static boolean verifyEmail(final Map<String,String> tokenPayload){
-        if(tokenPayload.get("email_verified")!=null && tokenPayload.get("email")!=null){
-            try{
+    private static boolean verifyEmail(final Map<String, String> tokenPayload) {
+        if (tokenPayload.get("email_verified") != null && tokenPayload.get("email") != null) {
+            try {
                 return Boolean.valueOf(tokenPayload.get("email_verified")) && tokenPayload.get("email").contains("@gmail.");
-            }catch(Exception e){
-                System.out.println("\n\n\tCheck emailVerified failed - cannot parse "+tokenPayload.get("email_verified")+" to boolean\n");
+            } catch (Exception e) {
+                System.out.println("\n\n\tCheck emailVerified failed - cannot parse " + tokenPayload.get("email_verified") + " to boolean\n");
             }
-        }else{
+        } else {
             System.out.println("\n\n\tCheck emailVerified failed - required information missing in the token");
         }
         return false;
     }
 
     // check token expiration is after now :
-    private static boolean checkExpirationTime(final Map<String,String> tokenPayload){
-        try{
-            if(tokenPayload.get("exp")!=null){
+    private static boolean checkExpirationTime(final Map<String, String> tokenPayload) {
+        try {
+            if (tokenPayload.get("exp") != null) {
                 // the "exp" value is in seconds and Date().getTime is in mili seconds
-                return Long.parseLong(tokenPayload.get("exp")+"000") > new java.util.Date().getTime();
-            }else{
+                return Long.parseLong(tokenPayload.get("exp") + "000") > new java.util.Date().getTime();
+            } else {
                 System.out.println("\n\n\tCheck expiration failed - required information missing in the token\n");
             }
-        }catch(Exception e){
-            System.out.println("\n\n\tCheck expiration failed - cannot parse "+tokenPayload.get("exp")+" into long\n");
+        } catch (Exception e) {
+            System.out.println("\n\n\tCheck expiration failed - cannot parse " + tokenPayload.get("exp") + " into long\n");
         }
         return false;
     }
 
     // check that at least one CLIENT_ID matches with token values
-    private static boolean checkAudience(final Map<String,String> tokenPayload){
-        if(tokenPayload.get("aud")!=null && tokenPayload.get("azp")!=null){
+    private static boolean checkAudience(final Map<String, String> tokenPayload) {
+        if (tokenPayload.get("aud") != null && tokenPayload.get("azp") != null) {
             List<String> pom = Arrays.asList("MY_CLIENT_ID_1",
                     "MY_CLIENT_ID_2",
                     "MY_CLIENT_ID_3");
 
-            if(pom.contains(tokenPayload.get("aud")) || pom.contains(tokenPayload.get("azp"))){
+            if (pom.contains(tokenPayload.get("aud")) || pom.contains(tokenPayload.get("azp"))) {
                 return true;
-            }else{
+            } else {
                 System.out.println("\n\n\tCheck audience failed - audiences differ\n");
                 return false;
             }
@@ -151,8 +151,8 @@ public class GoogleAuth {
     }
 
     // verify google token payload :
-    private static boolean doTokenVerification(final Map<String,String> tokenPayload){
-        if(tokenPayload!=null){
+    private static boolean doTokenVerification(final Map<String, String> tokenPayload) {
+        if (tokenPayload != null) {
             return verifyEmail(tokenPayload) // check that email address is verifies
                     && checkExpirationTime(tokenPayload) // check that token is not expired
                     && checkAudience(tokenPayload) // check audience
