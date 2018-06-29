@@ -50,7 +50,7 @@ public class SqlQuerySelect extends SqlQueryWithWhere {
 
 
 
-    public void setSortColumn(String sortColumn, boolean sortAB) {
+    public void sort(String sortColumn, boolean sortAB) {
         this.sortColumn = sortColumn;
         this.sortAB = sortAB;
     }
