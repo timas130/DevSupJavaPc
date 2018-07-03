@@ -52,6 +52,22 @@ public class Database extends Sql {
         return (long) result.values.get(0);
     }
 
+    public static long insert(String tableName, Object... o) {
+        String[] columns = new String[o.length/2];
+        Object[] values = new Object[o.length/2];
+
+        int c = 0;
+        int v = 0;
+        for (int i = 0; i < o.length; i++) {
+            if(i % 2 == 1) values[v++] = o[i];
+            else columns[c++] = (String) o[i];
+        }
+
+        SqlQueryInsert insert = new SqlQueryInsert(tableName, columns);
+
+        return Database.insert(insert, values);
+    }
+
     //
     //  Select
     //
