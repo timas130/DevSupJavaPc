@@ -38,11 +38,11 @@ public class SqlQuerySelect extends SqlQueryWithWhere {
                 columns.add(new ColumnString(columnsArray[i].toString()));
     }
 
-    public void limit() {
-        limit("?", "?");
+    public void offset_count() {
+        offset_count("?", "?");
     }
 
-    public void limit(Object limited_offset, Object limited_count) {
+    public void offset_count(Object limited_offset, Object limited_count) {
         this.limited = true;
         this.limited_offset = limited_offset;
         this.limited_count = limited_count;

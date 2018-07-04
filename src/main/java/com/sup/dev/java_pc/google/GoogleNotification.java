@@ -40,6 +40,8 @@ public class GoogleNotification {
                     new Json()
                             .put("message", new Json()
                                     .put("token", token)
+                                    .put("android", new Json()
+                                            .put("ttl", "20s"))
                                     .put("data", new Json()
                                             .put("my_data", message))
                                     .put("android", new Json()
