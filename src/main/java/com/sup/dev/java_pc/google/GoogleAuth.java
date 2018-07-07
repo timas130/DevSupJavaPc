@@ -1,6 +1,7 @@
 
 package com.sup.dev.java_pc.google;
 
+import com.sup.dev.java.classes.callbacks.simple.Callback;
 import com.sup.dev.java.classes.collections.Cash;
 import com.sup.dev.java.libs.debug.Debug;
 import com.sup.dev.java.libs.json.Json;
@@ -21,19 +22,17 @@ public class GoogleAuth {
         cash = new Cash<>(10000);
     }
 
-    public static String getGoogleId(String token) {
-
-
+    public static Result getGoogleId(String token) {
 
         String googleId = cash.get(token);
-        if (googleId != null) return googleId;
+        if (googleId != null) return new Result(googleId, true);
 
         Json json = requestTokenInfo(token);
         if(!verify(json) || !json.containsKey("sub"))return null;
 
         googleId = json.getString("sub");
         cash.put(token, googleId);
-        return googleId;
+        return new Result(googleId, false);
 
 
     }
@@ -64,6 +63,18 @@ public class GoogleAuth {
             }
         }
         return null;
+    }
+
+    public static class Result{
+
+        public final String googleId;
+        public final boolean fromCash;
+
+        public Result(String googleId, boolean fromCash){
+            this.googleId = googleId;
+            this.fromCash = fromCash;
+        }
+
     }
 
 }
