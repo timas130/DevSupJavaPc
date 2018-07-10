@@ -6,6 +6,7 @@ import com.sup.dev.java.tools.ToolsColor;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -43,7 +44,7 @@ public class ToolsImage {
     public static boolean isPNG(byte[] img) {
         byte[] pngH = {0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A};
         for (int i = 0; i < pngH.length; i++)
-            if (img[i] != pngH[i] && img[i+1] != pngH[i])
+            if (img[i] != pngH[i] && img[i + 1] != pngH[i])
                 return false;
         return true;
     }
@@ -57,11 +58,11 @@ public class ToolsImage {
         return true;
     }
 
-    public static  int[] getImgScaleUnknownType(byte[] img) {
+    public static int[] getImgScaleUnknownType(byte[] img) {
         return getImgScaleUnknownType(img, true, true, true);
     }
 
-    public static  int[] getImgScaleUnknownType(byte[] img, boolean png, boolean gif, boolean jpg) {
+    public static int[] getImgScaleUnknownType(byte[] img, boolean png, boolean gif, boolean jpg) {
         if (png && isPNG(img))
             return getImgScalePNG(img);
         else if (gif && isGIF(img))
@@ -94,7 +95,6 @@ public class ToolsImage {
     }
 
 
-
     public static boolean checkImageScaleUnknownType(byte[] img, int w, int h) {
         return checkImageScaleUnknownType(img, w, h, true, true, true);
     }
@@ -123,6 +123,7 @@ public class ToolsImage {
 
     private static boolean checkImageScalePNG(String suffix, byte[] img, int w, int h) {
         int[] imgScale = getImgScale(suffix, img);
+        Debug.log(">>>    " + imgScale[0] + "x" + imgScale[1] + " " + w + "x" + h);
         return imgScale[0] == w && imgScale[1] == h;
     }
 
@@ -156,8 +157,6 @@ public class ToolsImage {
         int[] imgScale = getImgScale(suffix, img);
         return imgScale[0] <= w && imgScale[1] <= h;
     }
-
-
 
 
     public static boolean checkImageScaleHaARD(byte[] img, int w, int h) {
