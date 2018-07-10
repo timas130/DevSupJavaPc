@@ -123,7 +123,6 @@ public class ToolsImage {
 
     private static boolean checkImageScalePNG(String suffix, byte[] img, int w, int h) {
         int[] imgScale = getImgScale(suffix, img);
-        Debug.log(">>>    " + imgScale[0] + "x" + imgScale[1] + " " + w + "x" + h);
         return imgScale[0] == w && imgScale[1] == h;
     }
 
