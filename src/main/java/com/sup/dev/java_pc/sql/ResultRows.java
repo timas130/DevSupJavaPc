@@ -32,4 +32,10 @@ public class ResultRows {
         return k;
     }
 
+    public Long[] asLongArray(){
+        Long[] a = new Long[rowsCount];
+        for(int i =0; i < rowsCount; i++) a[i] = next();
+        return a;
+    }
+
 }
