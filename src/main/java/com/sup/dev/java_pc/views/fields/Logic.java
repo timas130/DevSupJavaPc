@@ -5,7 +5,7 @@ import com.sup.dev.java.classes.callbacks.list.CallbacksList1;
 import com.sup.dev.java.classes.callbacks.simple.Callback;
 import com.sup.dev.java.classes.callbacks.simple.Callback1;
 import com.sup.dev.java.classes.providers.Provider1;
-import com.sup.dev.java.tools.ToolsText;
+import com.sup.dev.java.tools.ToolsTextJava;
 import com.sup.dev.java_pc.views.GUI;
 
 import javax.swing.*;
@@ -72,7 +72,7 @@ public class Logic implements MouseListener {
                     s = fb.getDocument().getText(0, offset) + s;
                 else
                     s = fb.getDocument().getText(0, offset) + s + fb.getDocument().getText(offset, fb.getDocument().getLength() - offset);
-                if ((filter == null || filter.provide(s)) && (!onlyNum || ToolsText.isInteger(s)) && (!onlyNumDouble || ToolsText.isDouble(s)))
+                if ((filter == null || filter.provide(s)) && (!onlyNum || ToolsTextJava.isInteger(s)) && (!onlyNumDouble || ToolsTextJava.isDouble(s)))
                     super.replace(fb, offset, length, text, attrs);
             }
         });
