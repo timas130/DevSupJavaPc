@@ -38,29 +38,47 @@ public class SqlQuerySelect extends SqlQueryWithWhere {
                 columns.add(new ColumnString(columnsArray[i].toString()));
     }
 
-    public void offset_count() {
-        offset_count("?", "?");
+    public SqlQuerySelect where(Object columns, String condition, Object values) {
+        return super.where(columns, condition, values);
     }
 
-    public void offset_count(Object limited_offset, Object limited_count) {
+    public SqlQuerySelect where(Object columns, String condition, Object values, String link) {
+        return super.where(columns, condition, values, link);
+    }
+
+    public SqlQuerySelect where(SqlWhere.Where... wheres) {
+        return super.where(wheres);
+    }
+
+    public SqlQuerySelect count(int count) {
+        return offset_count(0, count);
+    }
+
+    public SqlQuerySelect offset_count() {
+        return offset_count("?", "?");
+    }
+
+    public SqlQuerySelect offset_count(Object limited_offset, Object limited_count) {
         this.limited = true;
         this.limited_offset = limited_offset;
         this.limited_count = limited_count;
+        return this;
     }
 
-
-
-    public void sort(String sortColumn, boolean sortAB) {
+    public SqlQuerySelect sort(String sortColumn, boolean sortAB) {
         this.sortColumn = sortColumn;
         this.sortAB = sortAB;
+        return this;
     }
 
-    public void setGroupColumn(String groupColumn) {
+    public SqlQuerySelect setGroupColumn(String groupColumn) {
         this.groupColumn = groupColumn;
+        return this;
     }
 
-    public void setDistinct(boolean distinct) {
+    public SqlQuerySelect setDistinct(boolean distinct) {
         this.distinct = distinct;
+        return this;
     }
 
     @Override

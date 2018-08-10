@@ -18,17 +18,19 @@ public class SqlQueryUpdate extends SqlQueryWithWhere {
         }
     }
 
-    public void addUpdate(UpdateColumn updateColumn) {
+    public SqlQueryUpdate addUpdate(UpdateColumn updateColumn) {
         columns.add(updateColumn);
+        return this;
     }
 
-    public void addUpdate(String column) {
+    public SqlQueryUpdate addUpdate(String column) {
         columns.add(new UpdateColumnSimple(column));
+        return this;
     }
 
-
-    public void addUpdate(String column, Object values) {
+    public SqlQueryUpdate addUpdate(String column, Object values) {
         columns.add(new UpdateColumnSimple(column, values));
+        return this;
     }
 
     public int getUpdateColumnsCount(){

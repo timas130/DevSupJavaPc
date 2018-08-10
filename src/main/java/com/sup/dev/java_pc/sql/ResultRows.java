@@ -38,4 +38,8 @@ public class ResultRows {
         return a;
     }
 
+    public boolean hasNext(){
+        return values.hasNext();
+    }
+
 }
