@@ -23,9 +23,14 @@ public class GoogleNotification {
     private static final ThreadPoolExecutor threadPool;
 
     private static Callback1<String> onTokenNotFound;
+    private static String urlKey;
 
-    static  {
+    static {
         threadPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
+    }
+
+    public static void init(String urlKey) {
+        GoogleNotification.urlKey = urlKey;
     }
 
     public static void send(String message, String token) {
@@ -53,7 +58,7 @@ public class GoogleNotification {
             googleCredential.refreshToken();
             String accessToken = googleCredential.getAccessToken();
 
-            URL url = new URL("https://fcm.googleapis.com/v1/projects/communitymc-c51a5/messages:send");
+            URL url = new URL("https://fcm.googleapis.com/v1/projects/"+urlKey+"/messages:send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization", "Bearer " + accessToken);
             conn.setRequestProperty("Content-Type", "application/json; UTF-8");
