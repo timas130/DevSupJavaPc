@@ -151,7 +151,7 @@ public class SqlWhere extends Sql {
         protected String toQuery() {
             String s = "IN(";
             if (not)
-                s += "not " + s;
+                s = "not " + s;
             s = column + " " + s;
             for (int i = 0; i < values.length; i++) {
                 if (i > 0) s += ",";
