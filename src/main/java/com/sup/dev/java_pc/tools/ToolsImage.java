@@ -181,10 +181,10 @@ public class ToolsImage {
     }
 
     public static void replaceColors(BufferedImage source, int x, int y, int w, int h, int color, boolean ignoreAlpha) {
-        int a = ToolsColor.alpha(color);
-        int r = ToolsColor.red(color);
-        int g = ToolsColor.green(color);
-        int b = ToolsColor.blue(color);
+        int a = ToolsColor.INSTANCE.alpha(color);
+        int r = ToolsColor.INSTANCE.red(color);
+        int g = ToolsColor.INSTANCE.green(color);
+        int b = ToolsColor.INSTANCE.blue(color);
         WritableRaster raster = source.getRaster();
         int[] pixel = new int[4];
         for (int xx = x; xx < w; xx++) {

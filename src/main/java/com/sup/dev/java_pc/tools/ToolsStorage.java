@@ -7,7 +7,7 @@ import java.io.*;
 public class ToolsStorage {
 
     public static String readString(String file) throws IOException {
-        BufferedReader br = ToolsFiles.br(file);
+        BufferedReader br = ToolsFiles.INSTANCE.br(file);
 
         StringBuilder s = new StringBuilder();
         while (br.ready())
@@ -27,7 +27,7 @@ public class ToolsStorage {
                 f.createNewFile();
             }
 
-            BufferedWriter bw = ToolsFiles.bw(file);
+            BufferedWriter bw = ToolsFiles.INSTANCE.bw(file);
             bw.write(s.toString());
             bw.flush();
             bw.close();

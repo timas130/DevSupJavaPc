@@ -102,7 +102,7 @@ public class ZFrame extends JFrame {
         getContentPane().add(label, 0);
         getContentPane().setComponentZOrder(label, 0);
         getContentPane().repaint();
-        ToolsThreads.thread(GUI.SLEEP_2000, () -> {
+        ToolsThreads.INSTANCE.thread(GUI.SLEEP_2000, () -> {
             if(message == label)
                 hideMessage();
         });
