@@ -41,19 +41,19 @@ object GoogleAuth {
     }
 
     private fun requestTokenInfo(token: String): Json? {
-        var `in`: BufferedReader? = null
+        var inp: BufferedReader? = null
         try {
-            `in` = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
+            inp = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
             var s = ""
-            while (`in`.ready()) s += `in`.readLine()
+            while (inp.ready()) s += inp.readLine()
 
             return Json(s)
         } catch (e: Exception) {
             Debug.log(e)
         } finally {
-            if (`in` != null) {
+            if (inp != null) {
                 try {
-                    `in`.close()
+                    inp.close()
                 } catch (e: IOException) {
                     Debug.log(e)
                 }
