@@ -1,7 +1,7 @@
 package com.sup.dev.java_pc.sql
 
 
-class SqlQueryInsert(private val table: String, private vararg val columns: String) : SqlQuery() {
+class SqlQueryInsert(private val table: String, vararg val columns: String?) : SqlQuery() {
     private val values: Array<String?> = arrayOfNulls(columns.size)
 
     init {

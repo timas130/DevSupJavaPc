@@ -7,7 +7,7 @@ import java.util.ArrayList
 
 class PreparedQuery(private val closeable: Boolean, val query: String?) {
     val statement: PreparedStatement
-    var values: Array<out Any>? = null
+    var values: Array<out Any?>? = null
         private set
 
     constructor(query: String?) : this(true, query) {}
@@ -22,7 +22,7 @@ class PreparedQuery(private val closeable: Boolean, val query: String?) {
     }
 
     @Throws(SQLException::class)
-    fun setParams(vararg values: Any) {
+    fun setParams(vararg values: Any?) {
         this.values = values
         var paramIndex = 1
         for (o in values) {

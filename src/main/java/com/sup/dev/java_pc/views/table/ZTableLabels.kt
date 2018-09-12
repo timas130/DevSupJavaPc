@@ -10,7 +10,7 @@ import com.sup.dev.java_pc.views.widgets.ZSpace
 
 internal class ZTableLabels : ZPanel(ZPanel.Orientation.HORIZONTAL) {
 
-    protected fun complete(row: ZTableRow) {
+    fun complete(row: ZTableRow) {
         // add(new ZSpace(8));
 
         // completed = true;

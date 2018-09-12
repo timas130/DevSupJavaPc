@@ -9,7 +9,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 
 
-object Database{
+object Database {
 
     var SALIENT = false
 
@@ -42,14 +42,7 @@ object Database{
     //  Insert
     //
 
-    fun insertSalient(query: SqlQueryInsert, vararg values: Any): Long {
-        SALIENT = true
-        val v = insert(query, *values)
-        SALIENT = false
-        return v
-    }
-
-    fun insert(query: SqlQueryInsert, vararg values: Any): Long {
+    fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
         execute(query.getQuery(), *values)
         val result = select(selectLastInsert!!, 1)
         return if (result.values.get<Any>(0) is BigInteger) (result.values.get<Any>(0) as BigInteger).toInt().toLong() else result.values.get<Any>(0) as Long
@@ -72,6 +65,7 @@ object Database{
 
         return insert(insert, *values)
     }
+
 
 
     //
@@ -128,7 +122,8 @@ object Database{
         } catch (e: SQLException) {
             if (!SALIENT) {
                 Debug.print(query.query)
-                Debug.print(*query.values)
+                if (query.values == null) Debug.print("null")
+                else Debug.print(query.values)
             }
             throw RuntimeException(e)
         }
@@ -181,7 +176,7 @@ object Database{
     //  Execute
     //
 
-    fun execute(query: String?, vararg values: Any) {
+    fun execute(query: String?, vararg values: Any?) {
         try {
             val preparedQuery = PreparedQuery(query!!)
             preparedQuery.setParams(*values)

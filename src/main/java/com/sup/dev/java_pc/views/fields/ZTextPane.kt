@@ -1,6 +1,5 @@
 package com.sup.dev.java_pc.views.fields
 
-import com.sup.dev.java.classes.providers.Provider1
 import com.sup.dev.java_pc.views.GUI
 import java.awt.Color
 import java.awt.Graphics
@@ -71,15 +70,15 @@ class ZTextPane @JvmOverloads constructor(w: Int = GUI.S_512, hint: String = "")
         logic!!.setErrorIfEmpty()
     }
 
-    fun setOnChangedErrorChecker(onChanged: Provider1<String, Boolean>) {
+    fun setOnChangedErrorChecker(onChanged: (String?)-> Boolean) {
         logic!!.setOnChangedErrorChecker(onChanged)
     }
 
-    fun setOnChanged(onChanged: (String) -> Unit) {
+    fun setOnChanged(onChanged: (String?) -> Unit) {
         logic!!.addOnChanged(onChanged)
     }
 
-    fun setFilter(filter: Provider1<String, Boolean>) {
+    fun setFilter(filter: (String)-> Boolean) {
         logic!!.setFilter(filter)
     }
 

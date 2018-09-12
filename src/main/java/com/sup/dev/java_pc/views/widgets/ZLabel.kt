@@ -7,7 +7,7 @@ import javax.swing.JLabel
 import javax.swing.SwingConstants
 
 
-class ZLabel @JvmOverloads constructor(text: String = "", private val w: Int = -1, alignment: Int = SwingConstants.LEFT, font: Font = GUI.BODY_1) : JLabel("", alignment) {
+open class ZLabel @JvmOverloads constructor(text: String = "", private val w: Int = -1, alignment: Int = SwingConstants.LEFT, font: Font? = GUI.BODY_1) : JLabel("", alignment) {
     constructor(text: String, font: Font) : this(text, -1, SwingConstants.LEFT, font) {}
 
     init {
