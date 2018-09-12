@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.views.fields
 
 import com.sup.dev.java.classes.callbacks.CallbacksList1
+import com.sup.dev.java.classes.providers.Provider1
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java_pc.views.GUI
 import java.awt.*
@@ -16,8 +17,8 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
 
     private val onChanged = CallbacksList1<String>()
 
-    private var filter:  ((String) -> Boolean)? = null
-    private var errorChecker: ((String) -> Boolean)? = null
+    private var filter: Provider1<String, Boolean>? = null
+    private var errorChecker: Provider1<String, Boolean>? = null
     private var localOnTextChanged: (()->Unit)? = null
     var hint: String? = ""
         set(hint) {
@@ -91,17 +92,17 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
         (textComponent.document as AbstractDocument).documentFilter = object : DocumentFilter() {
             @Throws(BadLocationException::class)
             override fun replace(fb: DocumentFilter.FilterBypass, offset: Int, length: Int, text: String, attrs: AttributeSet) {
-                var textМ = text
+                var text = text
 
-                textМ = textМ.replace("\n".toRegex(), "").replace("\r".toRegex(), "")
-                var s = textМ
+                text = text.replace("\n".toRegex(), "").replace("\r".toRegex(), "")
+                var s = text
 
                 if (offset == fb.document.length)
                     s = fb.document.getText(0, offset) + s
                 else
                     s = fb.document.getText(0, offset) + s + fb.document.getText(offset, fb.document.length - offset)
-                if ((filter == null || filter!!.invoke(s)) && (!onlyNum || ToolsText.isInteger(s)) && (!onlyNumDouble || ToolsText.isDouble(s)))
-                    super.replace(fb, offset, length, textМ, attrs)
+                if ((filter == null || filter!!.provide(s)!!) && (!onlyNum || ToolsText.isInteger(s)) && (!onlyNumDouble || ToolsText.isDouble(s)))
+                    super.replace(fb, offset, length, text, attrs)
             }
         }
 
@@ -109,9 +110,9 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
     }
 
     internal fun onTextChanged() {
-        onChanged.invoke(text)
+        if (onChanged != null) onChanged.callback(text)
         if (localOnTextChanged != null) localOnTextChanged!!.invoke()
-        if (errorChecker != null) setErrorState(errorChecker!!.invoke(text))
+        if (errorChecker != null) setErrorState(errorChecker!!.provide(text)!!)
     }
 
     fun paint(g: Graphics) {
@@ -156,7 +157,7 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
         this.onChanged.add(onChanged)
     }
 
-    fun setFilter(filter: (String) -> Boolean) {
+    fun setFilter(filter: Provider1<String, Boolean>) {
         this.filter = filter
     }
 
@@ -179,7 +180,7 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
         textComponent.preferredSize = Dimension(w, (textComponent.getFontMetrics(textComponent.font).height + 4) * lines + 12)
     }
 
-    fun setErrorChecker(errorChecker: (String)-> Boolean) {
+    fun setErrorChecker(errorChecker: Provider1<String, Boolean>) {
         this.errorChecker = errorChecker
     }
 

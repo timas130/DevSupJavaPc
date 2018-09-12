@@ -1,7 +1,6 @@
 package com.sup.dev.java_pc.tools
 
 import com.sup.dev.java.tools.ToolsColor
-import com.sup.dev.java.tools.ToolsMapper
 import java.awt.AlphaComposite
 import java.awt.Graphics2D
 import java.awt.RenderingHints
@@ -58,7 +57,7 @@ object ToolsImage {
     }
 
     @JvmOverloads
-    fun getImgScaleUnknownType(img: ByteArray, png: Boolean = true, gif: Boolean = true, jpg: Boolean = true): Array<Int> {
+    fun getImgScaleUnknownType(img: ByteArray, png: Boolean = true, gif: Boolean = true, jpg: Boolean = true): IntArray {
         if (png && isPNG(img))
             return getImgScalePNG(img)
         else if (gif && isGIF(img))
@@ -68,23 +67,23 @@ object ToolsImage {
         throw IllegalArgumentException("Unknown Img type")
     }
 
-    fun getImgScaleJPG(img: ByteArray): Array<Int> {
+    fun getImgScaleJPG(img: ByteArray): IntArray {
         return getImgScale("jpg", img)
     }
 
-    fun getImgScaleGIF(img: ByteArray): Array<Int> {
+    fun getImgScaleGIF(img: ByteArray): IntArray {
         return getImgScale("gif", img)
     }
 
-    fun getImgScalePNG(img: ByteArray): Array<Int> {
+    fun getImgScalePNG(img: ByteArray): IntArray {
         return getImgScale("png", img)
     }
 
-    private fun getImgScale(suffix: String, img: ByteArray): Array<Int> {
+    private fun getImgScale(suffix: String, img: ByteArray): IntArray {
         val reader = ImageIO.getImageReadersBySuffix(suffix).next()
         try {
             reader.setInput(ImageIO.createImageInputStream(ByteArrayInputStream(img)), false)
-            return arrayOf(reader.getWidth(0), reader.getHeight(0))
+            return intArrayOf(reader.getWidth(0), reader.getHeight(0))
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
@@ -93,10 +92,12 @@ object ToolsImage {
 
     @JvmOverloads
     fun checkImageScaleUnknownType(img: ByteArray, w: Int, h: Int, png: Boolean = true, gif: Boolean = true, jpg: Boolean = true): Boolean {
-        if (png && isPNG(img)) return checkImageScalePNG(img, w, h)
-        else if (gif && isGIF(img)) return checkImageScaleGIF(img, w, h)
-        else if (jpg) return checkImageScaleJPG(img, w, h)
-
+        if (png && isPNG(img))
+            return checkImageScalePNG(img, w, h)
+        else if (gif && isGIF(img))
+            return checkImageScaleGIF(img, w, h)
+        else if (jpg)
+            return checkImageScaleJPG(img, w, h)
         throw IllegalArgumentException("Unknown Img type")
     }
 

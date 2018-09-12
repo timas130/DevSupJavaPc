@@ -5,7 +5,7 @@ import com.sup.dev.java.libs.json.JsonArray
 import com.sup.dev.java_pc.views.GUI
 import com.sup.dev.java_pc.views.panels.ZPanel
 import com.sup.dev.java_pc.views.panels.ZScrollPanel
-import com.sup.dev.java_pc.views.views.ZSpace
+import com.sup.dev.java_pc.views.widgets.ZSpace
 import java.awt.Component
 import java.util.ArrayList
 
@@ -233,7 +233,7 @@ abstract class ZTable {
     }
 
     fun fromJson(jsonArray: JsonArray, vararg keys: String) {
-        for (j in jsonArray.getJsons()) {
+        for (j in jsonArray.jsons) {
             val row_type = j!!.getInt("row_type")
             val row = addRowEnd(row_type)
             row.fromJson(j, *keys)

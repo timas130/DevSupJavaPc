@@ -1,5 +1,6 @@
 package com.sup.dev.java_pc.views.fields
 
+import com.sup.dev.java.classes.providers.Provider1
 import com.sup.dev.java_pc.views.GUI
 import java.awt.Color
 import java.awt.Graphics
@@ -39,8 +40,8 @@ class ZTextPane @JvmOverloads constructor(w: Int = GUI.S_512, hint: String = "")
 
     private inner class TextPane : JTextPane(), Field {
 
-        override fun setBackgroundSuper(color: Color) {
-            super.setBackground(color)
+        override fun setBackgroundSuper(bg: Color) {
+            super.setBackground(bg)
         }
 
         override fun paint(g: Graphics?) {
@@ -70,15 +71,15 @@ class ZTextPane @JvmOverloads constructor(w: Int = GUI.S_512, hint: String = "")
         logic!!.setErrorIfEmpty()
     }
 
-    fun setOnChangedErrorChecker(onChanged: (String?)-> Boolean) {
+    fun setOnChangedErrorChecker(onChanged: Provider1<String, Boolean>) {
         logic!!.setOnChangedErrorChecker(onChanged)
     }
 
-    fun setOnChanged(onChanged: (String?) -> Unit) {
+    fun setOnChanged(onChanged: (String) -> Unit) {
         logic!!.addOnChanged(onChanged)
     }
 
-    fun setFilter(filter: (String)-> Boolean) {
+    fun setFilter(filter: Provider1<String, Boolean>) {
         logic!!.setFilter(filter)
     }
 

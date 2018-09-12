@@ -4,7 +4,7 @@ import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.views.GUI
 import com.sup.dev.java_pc.views.panels.ZFogPanel
 import com.sup.dev.java_pc.views.panels.ZTitlePanel
-import com.sup.dev.java_pc.views.views.ZLabel
+import com.sup.dev.java_pc.views.widgets.ZLabel
 import java.awt.Component
 import java.awt.Graphics
 import java.awt.Graphics2D

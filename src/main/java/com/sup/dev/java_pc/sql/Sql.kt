@@ -20,8 +20,11 @@ object Sql {
     val ASC = " ASC "
     val DESC = " DESC "
 
+
+    val SELECT_LAST_ID = "SELECT LAST_INSERT_ID()"
+
     fun prepareColumns(vararg columns: String): String {
-        if (columns.isEmpty())
+        if (columns == null || columns.size == 0)
             return ""
         var s = columns[0]
         for (i in 1 until columns.size)
@@ -31,22 +34,6 @@ object Sql {
 
     fun SUM(column: String): String {
         return " SUM($column)"
-    }
-
-    fun MIN(column: String): String {
-        return " MIN($column)"
-    }
-
-    fun MAX(column: String): String {
-        return " MAX($column)"
-    }
-
-    fun AVG(column: String): String {
-        return " AVG($column)"
-    }
-
-    fun COUNT(column: String): String {
-        return " COUNT($column)"
     }
 
     fun IF(param: Any, value: Any, ret1: Any, ret2: Any): String {
@@ -93,6 +80,4 @@ object Sql {
         else
             java.lang.Long.parseLong(o.toString() + "")
     }
-
-    fun mirror(v:String) = v.replace("_", "\\_").replace("%", "\\%")
 }

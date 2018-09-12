@@ -2,40 +2,50 @@ package com.sup.dev.java_pc.sql
 
 import java.sql.PreparedStatement
 import java.sql.SQLException
-import java.sql.Statement
 import java.util.ArrayList
 
 
-class PreparedQuery(
-        private val closeable: Boolean,
-        val query: String?,
-        val database:DatabaseInstance,
-        val isInsert:Boolean=false
-) {
+class PreparedQuery(private val closeable: Boolean, val query: String?) {
     val statement: PreparedStatement
-    var values: Array<out Any?>? = null
+    var values: Array<out Any>? = null
         private set
 
-    constructor(query: String?, database:DatabaseInstance) : this(true, query, database) {}
-
-    constructor(query: String?, database:DatabaseInstance, isInsert:Boolean) : this(true, query, database, isInsert) {}
+    constructor(query: String?) : this(true, query) {}
 
     init {
-        if(!isInsert) {
-            statement = database.connection!!.prepareStatement(query)
-        }else{
-            statement = database.connection!!.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
+        try {
+            statement = Database.connection!!.prepareStatement(query)
+        } catch (e: SQLException) {
+            throw RuntimeException(e)
         }
+
     }
 
     @Throws(SQLException::class)
-    fun setParams(vararg values: Any?) {
+    fun setParams(vararg values: Any) {
         this.values = values
         var paramIndex = 1
         for (o in values) {
-            if (o is Array<*>) for (x in o) setParam(paramIndex++, x)
-            else if (o is ArrayList<*>) for (x in o) setParam(paramIndex++, x)
-            else setParam(paramIndex++, o)
+            if (o is Array<*>)
+                for (x in o)
+                    setParam(paramIndex++, x)
+            else if (o is IntArray)
+                for (x in o)
+                    setParam(paramIndex++, x)
+            else if (o is LongArray)
+                for (x in o)
+                    setParam(paramIndex++, x)
+            else if (o is FloatArray)
+                for (x in o)
+                    setParam(paramIndex++, x)
+            else if (o is DoubleArray)
+                for (x in o)
+                    setParam(paramIndex++, x)
+            else if (o is ArrayList<*>)
+                for (x in o)
+                    setParam(paramIndex++, x)
+            else
+                setParam(paramIndex++, o)
         }
     }
 

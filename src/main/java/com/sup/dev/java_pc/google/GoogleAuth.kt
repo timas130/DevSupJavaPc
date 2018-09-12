@@ -1,8 +1,7 @@
 package com.sup.dev.java_pc.google
 
 import com.sup.dev.java.classes.collections.Cash
-import com.sup.dev.java.libs.debug.err
-import com.sup.dev.java.libs.http_api.HttpRequest
+import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.json.Json
 import java.io.BufferedReader
 import java.io.IOException
@@ -10,81 +9,60 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 
+
 object GoogleAuth {
 
-    private var serverClientId = ""
-    private var serverClientSecret = ""
-    private var cash: Cash<String, String> = Cash(10000)
+    private var apiKey: String? = null
+    private var cash: Cash<String, String>? = null
 
-    fun init(serverClientId: String, serverClientSecret: String) {
-        GoogleAuth.serverClientId = serverClientId
-        GoogleAuth.serverClientSecret = serverClientSecret
+    fun init(apiKey: String) {
+        GoogleAuth.apiKey = apiKey
+        cash = Cash(10000)
     }
 
-    fun getGoogleId(token: String): String? {
+    fun getGoogleId(token: String): Result? {
 
-        var googleId = cash[token]
-        if (googleId != null) return googleId
+        var googleId = cash!![token]
+        if (googleId != null) return Result(googleId, true)
 
-        googleId = if (token.startsWith("4/")) requestByIdServerAuthCode(token)
-        else requestByIdToken(token)
+        val json = requestTokenInfo(token)
+        if (!verify(json!!) || !json.containsKey("sub")) return null
 
-        cash.put(token, googleId)
-        return googleId
+        googleId = json.getString("sub")
+        cash!!.put(token, googleId)
+        return Result(googleId, false)
 
 
     }
 
-    private fun requestByIdServerAuthCode(token: String): String? {
+    private fun verify(tokenJson: Json): Boolean {
+        if (tokenJson.containsKey("azp") && tokenJson.getString("azp") == apiKey) return true
+        return if (tokenJson.containsKey("aud") && tokenJson.getString("aud") == apiKey) true else false
+    }
+
+    private fun requestTokenInfo(token: String): Json? {
+        var `in`: BufferedReader? = null
         try {
-            val result = HttpRequest()
-                    .setUrl("https://www.googleapis.com/oauth2/v4/token")
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .setMethods(HttpRequest.Method.POST)
-                    .setJson(Json()
-                            .put("grant_type", "authorization_code")
-                            .put("client_id", serverClientId)
-                            .put("client_secret", serverClientSecret)
-                            .put("code", token)
-                    )
-                    .makeNow()
-
-            val json = Json(result.text)
-            val idToken = json.get("id_token", "") ?: ""
-
-            return requestByIdToken(idToken)
-        } catch (e: Exception) {
-            err(e)
-            return null
-        }
-
-    }
-
-    private fun requestByIdToken(token: String): String? {
-        var inp: BufferedReader? = null
-        try {
-            inp = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
+            `in` = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
             var s = ""
-            while (inp.ready()) s += inp.readLine()
+            while (`in`.ready()) s += `in`.readLine()
 
-            val json = Json(s)
-            if (!json.containsKey("sub")) return null
-            val googleId = json.getString("sub")
-
-            return googleId
+            return Json(s)
         } catch (e: Exception) {
-            err(e)
+            Debug.log(e)
         } finally {
-            if (inp != null) {
+            if (`in` != null) {
                 try {
-                    inp.close()
+                    `in`.close()
                 } catch (e: IOException) {
-                    err(e)
+                    Debug.log(e)
                 }
 
             }
         }
         return null
     }
+
+    class Result(val googleId: String?, val fromCash: Boolean)
 
 }

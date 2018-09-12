@@ -3,55 +3,43 @@ package com.sup.dev.java_pc.sql
 import java.util.ArrayList
 
 
-class SqlQueryUpdate(
-        private val table: String
-) : SqlQueryWithWhere() {
+class SqlQueryUpdate(private val table: String, vararg columns: Any) : SqlQueryWithWhere() {
     private val columns = ArrayList<UpdateColumn>()
 
-    override fun where(where: SqlWhere.Where): SqlQueryUpdate {
-        return super.where(where) as SqlQueryUpdate
+    val updateColumnsCount: Int
+        get() = columns.size
+
+    init {
+        for (i in columns.indices) {
+            if (columns[i] is UpdateColumn)
+                addUpdate(columns[i] as UpdateColumn)
+            else if (columns[i] is String)
+                addUpdate(UpdateColumnSimple(columns[i] as String))
+            else
+                throw RuntimeException("Bad field type [" + columns[i] + "]")
+        }
     }
 
-    override fun where(columns: Any, condition: String, values: Any, link: String): SqlQueryUpdate {
-        return super.where(columns, condition, values, link) as SqlQueryUpdate
-    }
-
-    fun whereValue(columns: Any, condition: String, value: Any): SqlQueryUpdate {
-        return where(columns, condition, "?").value(value)
-    }
-
-    fun whereValue(columns: Any, condition: String, value: Any, link: String): SqlQueryUpdate {
-        return where(columns, condition, "?", link).value(value)
-    }
-
-    fun update(updateColumn: UpdateColumn): SqlQueryUpdate {
+    fun addUpdate(updateColumn: UpdateColumn): SqlQueryUpdate {
         columns.add(updateColumn)
         return this
     }
 
-    fun update(column: String): SqlQueryUpdate {
+    fun addUpdate(column: String): SqlQueryUpdate {
         columns.add(UpdateColumnSimple(column))
         return this
     }
 
-    fun update(column: String, value: Any): SqlQueryUpdate {
-        columns.add(UpdateColumnSimple(column, value))
+    fun addUpdate(column: String, values: Any): SqlQueryUpdate {
+        columns.add(UpdateColumnSimple(column, values))
         return this
-    }
-
-    fun updateValue(column: String, value: Any): SqlQueryUpdate {
-        return update(column, "?").value(value)
-    }
-
-    override fun value(v: Any): SqlQueryUpdate {
-        return super.value(v) as SqlQueryUpdate
     }
 
     override fun createQuery(): String {
         val sql = StringBuilder(Sql.UPDATE + table + Sql.SET + columns[0].toQuery())
         for (i in 1 until columns.size)
             sql.append(",").append(columns[i].toQuery())
-        sql.append(createWhere())
+        sql.append(whereString)
         return sql.toString()
     }
 
@@ -61,10 +49,10 @@ class SqlQueryUpdate(
     }
 
 
-    class UpdateColumnSimple @JvmOverloads constructor(val column: String, val value: Any = "?") : UpdateColumn() {
+    class UpdateColumnSimple @JvmOverloads constructor(val column: String, val values: Any = "?") : UpdateColumn() {
 
         override fun toQuery(): String {
-            return "$column=$value"
+            return "$column=$values"
         }
     }
 

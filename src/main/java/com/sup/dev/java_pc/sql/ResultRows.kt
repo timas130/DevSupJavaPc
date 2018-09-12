@@ -20,39 +20,12 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
         return s.toString()
     }
 
-    operator fun <K> next(): K {
-        return values.next<K>()!!
-    }
-
-    fun <K> nextMayNull(): K? {
-        return values.nextMayNull<K>()
-    }
-
-    fun <K> nextMayNullOrNull(): K? {
-        if(!hasNext()) return null
-        return values.nextMayNull<K>()
+    operator fun <K> next(): K? {
+        return values.next<K>()
     }
 
     operator fun hasNext(): Boolean {
         return values.hasNext()
-    }
-
-    fun nextLongOrZero(): Long {
-        if (hasNext()){
-            val next:Any? = nextMayNull()
-            if(next is Number) return next.toLong()
-            return 0L
-        }else{
-            return 0L
-        }
-    }
-
-    fun sumOrZero(): Long {
-        return if (hasNext()) {
-            val x = nextMayNull<Any>() ?: return 0L
-            Sql.parseSum(x)
-        }
-        else 0L
     }
 
 }

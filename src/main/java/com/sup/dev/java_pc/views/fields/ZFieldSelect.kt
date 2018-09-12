@@ -3,8 +3,8 @@ package com.sup.dev.java_pc.views.fields
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java_pc.tools.ToolsGui
 import com.sup.dev.java_pc.views.GUI
-import com.sup.dev.java_pc.views.views.ZMenuItem
-import com.sup.dev.java_pc.views.views.ZPopup
+import com.sup.dev.java_pc.views.widgets.ZMenuItem
+import com.sup.dev.java_pc.views.widgets.ZPopup
 import java.awt.Color
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
@@ -13,7 +13,7 @@ import java.awt.event.KeyListener
 import java.util.ArrayList
 
 
-class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List<K>? = null) : ZField(w), KeyListener, FocusListener {
+class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, hint: String = "", values: List<K>? = null) : ZField(w), KeyListener, FocusListener {
 
     private val values = ArrayList<Item2<String, K>>()
     private val selected = ArrayList<Item2<String, K>>()
@@ -44,7 +44,7 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
     }
 
     override fun setErrorIfEmpty() {
-        setOnChangedErrorChecker { getSelected() == null && canShowError }
+        setOnChangedErrorChecker { source -> getSelected() == null && canShowError }
     }
 
 
@@ -101,7 +101,7 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
         selected.clear()
 
         for (v in values)
-            if (v.a1.toLowerCase().startsWith(text.toLowerCase()))
+            if (v.a1!!.toLowerCase().startsWith(text.toLowerCase()))
                 selected.add(v)
 
         val added = selected.size
@@ -114,8 +114,8 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
             })
 
         for (v in values)
-            if (v.a1.toLowerCase().contains(text.toLowerCase())
-                    && v.a1.length >= text.length
+            if (v.a1!!.toLowerCase().contains(text.toLowerCase())
+                    && v.a1!!.length >= text.length
                     && !selected.contains(v))
                 selected.add(v)
 

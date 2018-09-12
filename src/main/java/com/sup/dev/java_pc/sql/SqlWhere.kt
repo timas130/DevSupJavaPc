@@ -1,8 +1,6 @@
 package com.sup.dev.java_pc.sql
 
-import com.sup.dev.java.tools.ToolsMapper
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class SqlWhere {
@@ -24,9 +22,9 @@ class SqlWhere {
             addWhere(where)
     }
 
-    internal fun addWhere(where: Where) {
+    internal fun addWhere(vararg wheres: Where) {
         used = true
-        this.wheres.add(where)
+        Collections.addAll(this.wheres, *wheres)
     }
 
     internal fun toQuery(useLink: Boolean): String {
@@ -73,17 +71,12 @@ class SqlWhere {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class WhereIN(private val column: String, link: String, private val not: Boolean, var values: Array<out Any?>) : Where(link) {
+    class WhereIN(private val column: String, link: String, private val not: Boolean, vararg values: Any) : Where(link) {
+        private val values: Array<out Any> = values
 
-        constructor(column: String, values: ArrayList<out Any?>) : this(column, "AND", false, emptyArray()){
-            this.values = arrayOfNulls(values.size)
-            for(i in 0 until  values.size) (this.values as Array<Any?>)[i] = values[i]
-        }
+        constructor(column: String, vararg values: Any) : this(column, "AND", false, *values) {}
 
-        constructor(column: String, values: Array<out Any?>) : this(column, "AND", false, values)
-
-        constructor(column: String, not: Boolean, values: Array<out Any?>) : this(column, "AND", not, values)
+        constructor(column: String, not: Boolean, vararg values: Any) : this(column, "AND", not, *values) {}
 
         override fun toQuery(): String {
             var s = "IN("

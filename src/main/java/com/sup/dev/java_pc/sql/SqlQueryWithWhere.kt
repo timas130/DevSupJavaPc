@@ -9,25 +9,27 @@ abstract class SqlQueryWithWhere : SqlQuery() {
     private val wheres = ArrayList<SqlWhere>()
     private var mainConditionsIndex: Int = 0
 
+    protected val whereString: String
+        get() {
+            val whereString = StringBuilder()
+            if (mainConditionsIndex > 0)
+                whereString.append("(")
+            for (i in wheres.indices) {
+                if (mainConditionsIndex > 0 && i == mainConditionsIndex)
+                    whereString.append(")")
+                whereString.append(wheres[i].toQuery(i != 0))
+            }
+            return if (whereString.length != 0)
+                Sql.WHERE + whereString
+            else
+                whereString.toString()
+        }
+
     init {
         wheres.add(currentWhere)
     }
 
-    fun createWhere() : String{
-        val whereString = StringBuilder()
-        if (mainConditionsIndex > 0)
-            whereString.append("(")
-        for (i in wheres.indices) {
-            if (mainConditionsIndex > 0 && i == mainConditionsIndex)
-                whereString.append(")")
-            whereString.append(wheres[i].toQuery(i != 0))
-        }
-        return if (whereString.isNotEmpty())
-            Sql.WHERE + whereString
-        else
-            whereString.toString()
-    }
-
+    @JvmOverloads
     fun nextWhere(link: String, main: Boolean = false) {
         if (currentWhere.wheresCount == 0)
             wheres.remove(currentWhere)
@@ -37,13 +39,14 @@ abstract class SqlQueryWithWhere : SqlQuery() {
             mainConditionsIndex = wheres.size - 1
     }
 
-    open fun where(columns: Any, condition: String, values: Any, link: String = "AND"): SqlQueryWithWhere {
+    open fun <K : SqlQueryWithWhere> where(columns: Any, condition: String, values: Any, link: String = "AND"): K {
         return where(SqlWhere.WhereColumn(columns, condition, values, link))
     }
 
-    open fun where(where: SqlWhere.Where): SqlQueryWithWhere {
-        currentWhere.addWhere(where)
-        return this
+
+    open fun <K : SqlQueryWithWhere> where(vararg wheres: SqlWhere.Where): K {
+        currentWhere.addWhere(*wheres)
+        return this as K
     }
 
 

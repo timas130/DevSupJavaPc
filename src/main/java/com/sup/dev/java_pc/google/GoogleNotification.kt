@@ -1,63 +1,58 @@
 package com.sup.dev.java_pc.google
 
-import com.sup.dev.java.classes.items.Item2
-import com.sup.dev.java.libs.debug.err
-import com.sup.dev.java.libs.debug.info
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.libs.json.JsonArray
-import com.sup.dev.java.tools.ToolsThreads
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+
 
 object GoogleNotification {
 
-    private var onTokenNotFound: ((String) -> Unit)? = null
-    private var apiKey: String? = null
-    private val executePacks = ArrayList<Item2<String, Array<String>>>()
+    private val threadPool: ThreadPoolExecutor
 
-    fun init(apiKey: String) {
-        GoogleNotification.apiKey = apiKey
-        ToolsThreads.thread {
-            while (true){
-                if (executePacks.isEmpty()) ToolsThreads.sleep(1000)
-                else {
-                    var item: Item2<String, Array<String>>? = null
-                    synchronized(executePacks) { item = executePacks.removeAt(0) }
+    private var onTokenNotFound: ((String)->Unit)? = null
+    private var urlKey: String? = null
 
-                    if (item != null) {
-                        val message = item!!.a1
-                        val tokens = item!!.a2
-                        val max = 500
-                        var position = 0
-                        while (position < tokens.size) {
-                            val end = position + max
-                            sendNow(message, tokens.copyOfRange(position, Math.min(tokens.size, end)))
-                            position += max
-                        }
-                    }
-
-
-                }
-            }
-        }
+    init {
+        threadPool = ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
     }
 
-    fun send(message: String, tokens: Array<String>) {
-        synchronized(executePacks) { executePacks.add(Item2(message, tokens)) }
+    fun init(urlKey: String) {
+        GoogleNotification.urlKey = urlKey
     }
 
-    fun sendNow(message: String, tokens: Array<String>) {
+    fun send(message: String, token: String) {
+        threadPool.execute { sendNow(message, token) }
+    }
+
+    fun sendNow(message: String, token: String) {
+
         try {
 
             val jsonRoot = Json()
-                    .put("registration_ids", JsonArray().put(*tokens))
-                    .put("data", Json().put("my_data", message))
-                    .put("time_to_live", 30)
+                    .put("message", Json()
+                            .put("token", token)
+                            .put("android", Json()
+                                    .put("ttl", "20s"))
+                            .put("data", Json()
+                                    .put("my_data", message))
+                            .put("android", Json()
+                                    .put("priority", "high")))
 
-            val url = URL("https://fcm.googleapis.com/fcm/send")
+            val googleCredential = GoogleCredential
+                    .fromStream(FileInputStream(File("service-account.json")))
+                    .createScoped(listOf("https://www.googleapis.com/auth/firebase.messaging"))
+            googleCredential.refreshToken()
+            val accessToken = googleCredential.accessToken
+
+            val url = URL("https://fcm.googleapis.com/v1/projects/$urlKey/messages:send")
             val conn = url.openConnection() as HttpURLConnection
-            conn.setRequestProperty("Authorization", "key=$apiKey")
+            conn.setRequestProperty("Authorization", "Bearer $accessToken")
             conn.setRequestProperty("Content-Type", "application/json; UTF-8")
             conn.requestMethod = "POST"
             conn.useCaches = false
@@ -70,42 +65,21 @@ object GoogleNotification {
 
             val status = conn.responseCode
 
-            if (status == 200) {
-                val br = BufferedReader(InputStreamReader(conn.inputStream))
-                var s = ""
-                while (br.ready()) s += br.readLine()
-                val json = Json(s)
-                if (json.containsKey("errors")) {
-                    val jsons = json.getJsonArray("errors")!!
-                    for (i in 0 until jsons.size()) {
-                        val j = jsons.getJson(i)
-                        if (j.containsKey("token") && j.containsKey("error") && j.getString("error").startsWith("bad registration id data: ")) {
-                            onTokenNotFound!!.invoke(j.getString("token"))
-                        }
-                    }
-                } else if (json.containsKey("results")) {
-                    val jsons = json.getJsonArray("results")!!
-                    for (i in 0 until jsons.size()) {
-                        val j = jsons.getJson(i)
-                        if (j.containsKey("error") && j.getString("error", "") == "NotRegistered") {
-                            onTokenNotFound!!.invoke(tokens[i])
-                        }
-                    }
-                }
-            } else {
-                info("Google notification sending error. code = $status")
+            if (status == 404 && onTokenNotFound != null)
+                onTokenNotFound!!.invoke(token)
+            else if (status != 200) {
+                Debug.print("Google notification sending error. code = $status")
                 val br = BufferedReader(InputStreamReader(conn.errorStream))
-                while (br.ready()) info(br.readLine())
-
+                while (br.ready()) Debug.print(br.readLine())
             }
 
         } catch (ex: IOException) {
-            err(ex)
+            Debug.log(ex)
         }
 
     }
 
-    fun onTokenNotFound(onTokenNotFound: ((String) -> Unit)) {
+    fun onTokenNotFound(onTokenNotFound: ((String)->Unit)) {
         GoogleNotification.onTokenNotFound = onTokenNotFound
     }
 }

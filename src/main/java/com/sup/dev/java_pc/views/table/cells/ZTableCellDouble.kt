@@ -8,7 +8,7 @@ class ZTableCellDouble(type: Int, size: Int, label: String, canBeEmpty: Boolean)
     init {
 
         field.setOnlyDouble()
-        setValue("", true)
+        setValue(null!!, true)
     }
 
     override fun getCellValue(): Any {

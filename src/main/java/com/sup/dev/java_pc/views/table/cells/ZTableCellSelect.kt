@@ -5,6 +5,7 @@ import com.sup.dev.java_pc.views.GUI
 import com.sup.dev.java_pc.views.fields.ZFieldSelect
 import com.sup.dev.java_pc.views.table.ZTableCell
 import java.awt.Component
+import java.util.ArrayList
 
 
 class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: String, canBeEmpty: Boolean, values: List<Any>? = null) : ZTableCell(type, size, label) {
@@ -17,7 +18,7 @@ class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: St
 
     init {
 
-        field = ZFieldSelect(size, values)
+        field = ZFieldSelect(size, label, values)
 
         if (!canBeEmpty) field.setErrorIfEmpty()
     }
@@ -49,7 +50,7 @@ class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: St
     }
 
     fun setOnSelect(onSelect: () -> Unit) {
-        setOnSelect { _ -> onSelect.invoke() }
+        setOnSelect { source -> onSelect.invoke() }
     }
 
     fun setOnSelect(onSelect: (Any?) -> Unit) {
@@ -61,7 +62,7 @@ class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: St
     }
 
     override fun setShowChanges() {
-        field.addOnChanged { field.setBackground(if (isChanged()) GUI.LIGHT_GREEN_100 else GUI.WHITE) }
+        field.addOnChanged { source -> field.setBackground(if (isChanged()) GUI.LIGHT_GREEN_100 else GUI.WHITE) }
     }
 
     override fun setOnRightClick(onRightClick: () -> Unit) {
