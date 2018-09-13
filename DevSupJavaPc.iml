@@ -54,6 +54,7 @@
     <orderEntry type="module" module-name="DevSupJava" exported="" />
     <orderEntry type="module" module-name="DevSupJava" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-stdlib-jdk8-1.2.61" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-reflect-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-stdlib-jdk7-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-stdlib-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-stdlib-common-1.2.61" level="project" />
@@ -73,6 +74,7 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="protobuf-java-2.6.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="xpp3-1.1.4c" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="kotlin-stdlib-jdk8-1.2.61" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="kotlin-reflect-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="kotlin-stdlib-jdk7-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="kotlin-stdlib-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="kotlin-stdlib-common-1.2.61" level="project" />
@@ -92,6 +94,7 @@
     <orderEntry type="library" exported="" scope="RUNTIME" name="protobuf-java-2.6.1" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="xpp3-1.1.4c" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="kotlin-stdlib-jdk8-1.2.61" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="kotlin-reflect-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="kotlin-stdlib-jdk7-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="kotlin-stdlib-1.2.61" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="kotlin-stdlib-common-1.2.61" level="project" />
