@@ -48,7 +48,7 @@ object Database {
         return if (result.values.get<Any>(0) is BigInteger) (result.values.get<Any>(0) as BigInteger).toInt().toLong() else result.values.get<Any>(0) as Long
     }
 
-    fun insert(tableName: String, vararg o: Any): Long {
+    fun insert(tableName: String, vararg o: Any?): Long {
         val columns = arrayOfNulls<String>(o.size / 2)
         val values = arrayOfNulls<Any>(o.size / 2)
 

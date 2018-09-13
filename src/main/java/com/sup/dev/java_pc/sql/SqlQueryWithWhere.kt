@@ -39,14 +39,13 @@ abstract class SqlQueryWithWhere : SqlQuery() {
             mainConditionsIndex = wheres.size - 1
     }
 
-    open fun <K : SqlQueryWithWhere> where(columns: Any, condition: String, values: Any, link: String = "AND"): K {
+    open fun where(columns: Any, condition: String, values: Any, link: String = "AND"): SqlQueryWithWhere {
         return where(SqlWhere.WhereColumn(columns, condition, values, link))
     }
 
-
-    open fun <K : SqlQueryWithWhere> where(vararg wheres: SqlWhere.Where): K {
+    open fun where(vararg wheres: SqlWhere.Where): SqlQueryWithWhere {
         currentWhere.addWhere(*wheres)
-        return this as K
+        return this
     }
 
 

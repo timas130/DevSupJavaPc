@@ -71,12 +71,12 @@ class SqlWhere {
         }
     }
 
-    class WhereIN(private val column: String, link: String, private val not: Boolean, vararg values: Any) : Where(link) {
-        private val values: Array<out Any> = values
+    class WhereIN(private val column: String, link: String, private val not: Boolean, vararg values: Any?) : Where(link) {
+        private val values: Array<out Any?> = values
 
-        constructor(column: String, vararg values: Any) : this(column, "AND", false, *values) {}
+        constructor(column: String, vararg values: Any?) : this(column, "AND", false, *values) {}
 
-        constructor(column: String, not: Boolean, vararg values: Any) : this(column, "AND", not, *values) {}
+        constructor(column: String, not: Boolean, vararg values: Any?) : this(column, "AND", not, *values) {}
 
         override fun toQuery(): String {
             var s = "IN("

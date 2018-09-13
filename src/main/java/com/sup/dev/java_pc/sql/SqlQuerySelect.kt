@@ -43,9 +43,18 @@ class SqlQuerySelect : SqlQueryWithWhere {
     }
 
 
- //   override fun <K : SqlQueryWithWhere> where(columns: Any, condition: String, values: Any, link: String = "AND"): K {
- //       return where(SqlWhere.WhereColumn(columns, condition, values, link))
- //   }
+    fun where(columns: Any, condition: String, values: Any): SqlQuerySelect {
+        return super.where(SqlWhere.WhereColumn(columns, condition, values, "AND")) as SqlQuerySelect
+    }
+
+    override fun where(columns: Any, condition: String, values: Any, link: String): SqlQuerySelect {
+        return super.where(SqlWhere.WhereColumn(columns, condition, values, link)) as SqlQuerySelect
+    }
+
+    override fun where(vararg wheres: SqlWhere.Where): SqlQuerySelect {
+        return super.where(*wheres) as SqlQuerySelect
+    }
+
 
     fun count(count: Int): SqlQuerySelect {
         return offset_count(0, count)
