@@ -73,7 +73,7 @@ object Database {
     //
 
 
-    fun select(query: SqlQuerySelect, vararg values: Any): ResultRows {
+    fun select(query: SqlQuerySelect, vararg values: Any?): ResultRows {
         try {
             val preparedQuery = PreparedQuery(query.getQuery())
             preparedQuery.setParams(*values)
@@ -88,7 +88,7 @@ object Database {
 
     }
 
-    fun select(columnsCount: Int, query: String, vararg values: Any): ResultRows {
+    fun select(columnsCount: Int, query: String, vararg values: Any?): ResultRows {
 
         try {
             val preparedQuery = PreparedQuery(query)
