@@ -27,5 +27,4 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
     operator fun hasNext(): Boolean {
         return values.hasNext()
     }
-
 }

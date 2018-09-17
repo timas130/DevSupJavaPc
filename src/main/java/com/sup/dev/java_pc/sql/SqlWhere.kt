@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.sql
 
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SqlWhere {
@@ -71,12 +72,13 @@ class SqlWhere {
         }
     }
 
-    class WhereIN(private val column: String, link: String, private val not: Boolean, vararg values: Any?) : Where(link) {
+    class WhereIN(private val column: String, link: String, private val not: Boolean, values: Array<out Any?>) : Where(link) {
+
         private val values: Array<out Any?> = values
 
-        constructor(column: String, vararg values: Any?) : this(column, "AND", false, *values) {}
+        constructor(column: String, values: Array<out Any?>) : this(column, "AND", false, values)
 
-        constructor(column: String, not: Boolean, vararg values: Any?) : this(column, "AND", not, *values) {}
+        constructor(column: String, not: Boolean, values: Array<out Any?>) : this(column, "AND", not, values)
 
         override fun toQuery(): String {
             var s = "IN("

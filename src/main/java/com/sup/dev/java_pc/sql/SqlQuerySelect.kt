@@ -10,8 +10,8 @@ class SqlQuerySelect : SqlQueryWithWhere {
 
     private var table: String? = null
     private var limited: Boolean = false
-    private var limited_offset: Any? = null
-    private var limited_count: Any? = null
+    private var limited_offset: Any = 0
+    private var limited_count: Any = 0
     private var groupColumn: String? = null
     private var sortColumn: String? = null
     private var sortAB: Boolean = false
@@ -57,10 +57,13 @@ class SqlQuerySelect : SqlQueryWithWhere {
 
 
     fun count(count: Int): SqlQuerySelect {
-        return offset_count(0, count)
+        return offset_count(limited_offset, count)
     }
 
-    @JvmOverloads
+    fun offset(offset: Int): SqlQuerySelect {
+        return offset_count(offset, limited_count)
+    }
+
     fun offset_count(limited_offset: Any = "?", limited_count: Any = "?"): SqlQuerySelect {
         this.limited = true
         this.limited_offset = limited_offset
