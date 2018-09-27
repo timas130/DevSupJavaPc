@@ -1,5 +1,6 @@
 package com.sup.dev.java_pc.sql
 
+import com.sup.dev.java.tools.ToolsMapper
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -72,11 +73,14 @@ class SqlWhere {
         }
     }
 
-    class WhereIN(private val column: String, link: String, private val not: Boolean, values: Array<out Any?>) : Where(link) {
+    class WhereIN(private val column: String, link: String, private val not: Boolean, var values: Array<out Any?>) : Where(link) {
 
-        private val values: Array<out Any?> = values
+        constructor(column: String, values: ArrayList<out Any?>) : this(column, "AND", false, emptyArray()){
+            this.values = arrayOfNulls(values.size)
+            for(i in 0 until  values.size) (this.values as Array<Any?>)[i] = values[i]
+        }
 
-        constructor(column: String, values: Array<out Any?>) : this(column, "AND", false, values)
+        constructor(column: String, vararg values: Any?) : this(column, "AND", false, values)
 
         constructor(column: String, not: Boolean, values: Array<out Any?>) : this(column, "AND", not, values)
 
