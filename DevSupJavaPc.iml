@@ -72,5 +72,7 @@
     <orderEntry type="library" exported="" name="Gradle: mysql-connector-java-5.1.39-bin" level="project" />
     <orderEntry type="library" exported="" name="Gradle: protobuf-java-2.6.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: xpp3-1.1.4c" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: json" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: json" level="project" />
   </component>
 </module>
