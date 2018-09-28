@@ -17,7 +17,6 @@
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/build/classes/kotlin/main" />
-          <option name="classpath" value="$MODULE_DIR$/libs/commons-logging-1.1.1.jar;C:/InProgress/Inter/DevSupJavaPc/libs/google-api-client-1.22.0.jar;C:/InProgress/Inter/DevSupJavaPc/libs/google-http-client-1.22.0.jar;C:/InProgress/Inter/DevSupJavaPc/libs/google-http-client-jackson2-1.22.0.jar;C:/InProgress/Inter/DevSupJavaPc/libs/google-oauth-client-1.22.0.jar;C:/InProgress/Inter/DevSupJavaPc/libs/gson-2.1.jar;C:/InProgress/Inter/DevSupJavaPc/libs/httpclient-4.0.1.jar;C:/InProgress/Inter/DevSupJavaPc/libs/httpcore-4.0.1.jar;C:/InProgress/Inter/DevSupJavaPc/libs/jackson-core-2.1.3.jar;C:/InProgress/Inter/DevSupJavaPc/libs/javax.mail.jar;C:/InProgress/Inter/DevSupJavaPc/libs/jsr305-1.3.9.jar;C:/InProgress/Inter/DevSupJavaPc/libs/mysql-connector-java-5.1.39-bin.jar;C:/InProgress/Inter/DevSupJavaPc/libs/protobuf-java-2.6.1.jar;C:/InProgress/Inter/DevSupJavaPc/libs/xpp3-1.1.4c.jar;C:/InProgress/Inter/DevSupJava/build/classes/kotlin/main;C:/Users/Tester/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.2.61/b0ffdd7ab0bae086a50816e55d94e298311d4c88/kotlin-stdlib-jdk8-1.2.61.jar;C:/Users/Tester/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.2.61/bc77c34ff80df88b4d9b0418ea4ae758544573f3/kotlin-stdlib-jdk7-1.2.61.jar;C:/Users/Tester/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.61/5bc44acc4b3f0d19166ae3e50454b41e8ff29335/kotlin-stdlib-1.2.61.jar;C:/Users/Tester/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.2.61/772de03e12d932f489e41aef997d26c20a4ebee6/kotlin-stdlib-common-1.2.61.jar;C:/Users/Tester/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="DevSupJavaPc" />
@@ -41,8 +40,8 @@
     <output-test url="file://$MODULE_DIR$/build/classes/java/test" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
