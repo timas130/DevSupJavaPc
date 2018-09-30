@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.tools
 
 import com.sup.dev.java.tools.ToolsColor
+import com.sup.dev.java.tools.ToolsMapper
 import java.awt.AlphaComposite
 import java.awt.Graphics2D
 import java.awt.RenderingHints
@@ -57,7 +58,7 @@ object ToolsImage {
     }
 
     @JvmOverloads
-    fun getImgScaleUnknownType(img: ByteArray, png: Boolean = true, gif: Boolean = true, jpg: Boolean = true): IntArray {
+    fun getImgScaleUnknownType(img: ByteArray, png: Boolean = true, gif: Boolean = true, jpg: Boolean = true): Array<Int> {
         if (png && isPNG(img))
             return getImgScalePNG(img)
         else if (gif && isGIF(img))
@@ -67,23 +68,23 @@ object ToolsImage {
         throw IllegalArgumentException("Unknown Img type")
     }
 
-    fun getImgScaleJPG(img: ByteArray): IntArray {
+    fun getImgScaleJPG(img: ByteArray): Array<Int> {
         return getImgScale("jpg", img)
     }
 
-    fun getImgScaleGIF(img: ByteArray): IntArray {
+    fun getImgScaleGIF(img: ByteArray): Array<Int> {
         return getImgScale("gif", img)
     }
 
-    fun getImgScalePNG(img: ByteArray): IntArray {
+    fun getImgScalePNG(img: ByteArray): Array<Int> {
         return getImgScale("png", img)
     }
 
-    private fun getImgScale(suffix: String, img: ByteArray): IntArray {
+    private fun getImgScale(suffix: String, img: ByteArray): Array<Int> {
         val reader = ImageIO.getImageReadersBySuffix(suffix).next()
         try {
             reader.setInput(ImageIO.createImageInputStream(ByteArrayInputStream(img)), false)
-            return intArrayOf(reader.getWidth(0), reader.getHeight(0))
+            return arrayOf(reader.getWidth(0), reader.getHeight(0))
         } catch (e: IOException) {
             throw RuntimeException(e)
         }

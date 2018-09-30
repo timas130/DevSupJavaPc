@@ -80,7 +80,7 @@ class SqlWhere {
             for(i in 0 until  values.size) (this.values as Array<Any?>)[i] = values[i]
         }
 
-        constructor(column: String, vararg values: Any?) : this(column, "AND", false, values)
+        constructor(column: String, values: Array<out Any?>) : this(column, "AND", false, values)
 
         constructor(column: String, not: Boolean, values: Array<out Any?>) : this(column, "AND", not, values)
 

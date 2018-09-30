@@ -26,26 +26,9 @@ class PreparedQuery(private val closeable: Boolean, val query: String?) {
         this.values = values
         var paramIndex = 1
         for (o in values) {
-            if (o is Array<*>)
-                for (x in o)
-                    setParam(paramIndex++, x)
-            else if (o is IntArray)
-                for (x in o)
-                    setParam(paramIndex++, x)
-            else if (o is LongArray)
-                for (x in o)
-                    setParam(paramIndex++, x)
-            else if (o is FloatArray)
-                for (x in o)
-                    setParam(paramIndex++, x)
-            else if (o is DoubleArray)
-                for (x in o)
-                    setParam(paramIndex++, x)
-            else if (o is ArrayList<*>)
-                for (x in o)
-                    setParam(paramIndex++, x)
-            else
-                setParam(paramIndex++, o)
+            if (o is Array<*>) for (x in o) setParam(paramIndex++, x)
+            else if (o is ArrayList<*>) for (x in o) setParam(paramIndex++, x)
+            else setParam(paramIndex++, o)
         }
     }
 

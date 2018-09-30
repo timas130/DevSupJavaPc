@@ -233,7 +233,7 @@ abstract class ZTable {
     }
 
     fun fromJson(jsonArray: JsonArray, vararg keys: String) {
-        for (j in jsonArray.jsons) {
+        for (j in jsonArray.getJsons()) {
             val row_type = j!!.getInt("row_type")
             val row = addRowEnd(row_type)
             row.fromJson(j, *keys)
