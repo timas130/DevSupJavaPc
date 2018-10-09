@@ -39,8 +39,8 @@ class ZTextPane @JvmOverloads constructor(w: Int = GUI.S_512, hint: String = "")
 
     private inner class TextPane : JTextPane(), Field {
 
-        override fun setBackgroundSuper(bg: Color) {
-            super.setBackground(bg)
+        override fun setBackgroundSuper(color: Color) {
+            super.setBackground(color)
         }
 
         override fun paint(g: Graphics?) {

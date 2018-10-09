@@ -5,7 +5,6 @@ import com.sup.dev.java_pc.views.GUI
 import com.sup.dev.java_pc.views.fields.ZFieldSelect
 import com.sup.dev.java_pc.views.table.ZTableCell
 import java.awt.Component
-import java.util.ArrayList
 
 
 class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: String, canBeEmpty: Boolean, values: List<Any>? = null) : ZTableCell(type, size, label) {
@@ -18,7 +17,7 @@ class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: St
 
     init {
 
-        field = ZFieldSelect(size, label, values)
+        field = ZFieldSelect(size, values)
 
         if (!canBeEmpty) field.setErrorIfEmpty()
     }

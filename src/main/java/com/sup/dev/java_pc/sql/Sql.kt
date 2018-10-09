@@ -24,7 +24,7 @@ object Sql {
     val SELECT_LAST_ID = "SELECT LAST_INSERT_ID()"
 
     fun prepareColumns(vararg columns: String): String {
-        if (columns == null || columns.size == 0)
+        if (columns.isEmpty())
             return ""
         var s = columns[0]
         for (i in 1 until columns.size)

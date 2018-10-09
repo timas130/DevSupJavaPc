@@ -78,8 +78,8 @@ open class ZField @JvmOverloads constructor(w: Int = GUI.S_256, hint: String = "
 
     }
 
-    override fun setBackgroundSuper(bg: Color) {
-        super.setBackground(bg)
+    override fun setBackgroundSuper(color: Color) {
+        super.setBackground(color)
     }
 
     fun setOnlyInt() {

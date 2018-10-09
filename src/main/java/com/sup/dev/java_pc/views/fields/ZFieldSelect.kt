@@ -13,7 +13,7 @@ import java.awt.event.KeyListener
 import java.util.ArrayList
 
 
-class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, hint: String = "", values: List<K>? = null) : ZField(w), KeyListener, FocusListener {
+class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List<K>? = null) : ZField(w), KeyListener, FocusListener {
 
     private val values = ArrayList<Item2<String, K>>()
     private val selected = ArrayList<Item2<String, K>>()
