@@ -93,12 +93,10 @@ object ToolsImage {
 
     @JvmOverloads
     fun checkImageScaleUnknownType(img: ByteArray, w: Int, h: Int, png: Boolean = true, gif: Boolean = true, jpg: Boolean = true): Boolean {
-        if (png && isPNG(img))
-            return checkImageScalePNG(img, w, h)
-        else if (gif && isGIF(img))
-            return checkImageScaleGIF(img, w, h)
-        else if (jpg)
-            return checkImageScaleJPG(img, w, h)
+        if (png && isPNG(img)) return checkImageScalePNG(img, w, h)
+        else if (gif && isGIF(img)) return checkImageScaleGIF(img, w, h)
+        else if (jpg) return checkImageScaleJPG(img, w, h)
+
         throw IllegalArgumentException("Unknown Img type")
     }
 
