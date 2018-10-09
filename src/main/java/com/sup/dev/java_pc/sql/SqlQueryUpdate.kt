@@ -49,10 +49,10 @@ class SqlQueryUpdate(private val table: String, vararg columns: Any) : SqlQueryW
     }
 
 
-    class UpdateColumnSimple @JvmOverloads constructor(val column: String, val values: Any = "?") : UpdateColumn() {
+    class UpdateColumnSimple @JvmOverloads constructor(val column: String, val value: Any = "?") : UpdateColumn() {
 
         override fun toQuery(): String {
-            return "$column=$values"
+            return "$column=$value"
         }
     }
 
