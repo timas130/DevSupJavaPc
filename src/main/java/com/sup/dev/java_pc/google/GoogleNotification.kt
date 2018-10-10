@@ -17,13 +17,15 @@ object GoogleNotification {
 
     private var onTokenNotFound: ((String)->Unit)? = null
     private var urlKey: String? = null
+    private var filePostfix: String = ""
 
     init {
         threadPool = ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
     }
 
-    fun init(urlKey: String) {
+    fun init(urlKey: String, filePostfix: String ="") {
         GoogleNotification.urlKey = urlKey
+        GoogleNotification.filePostfix = filePostfix
     }
 
     fun send(message: String, token: String) {
@@ -45,7 +47,7 @@ object GoogleNotification {
                                     .put("priority", "high")))
 
             val googleCredential = GoogleCredential
-                    .fromStream(FileInputStream(File("service-account.json")))
+                    .fromStream(FileInputStream(File("service-account$filePostfix.json")))
                     .createScoped(listOf("https://www.googleapis.com/auth/firebase.messaging"))
             googleCredential.refreshToken()
             val accessToken = googleCredential.accessToken
