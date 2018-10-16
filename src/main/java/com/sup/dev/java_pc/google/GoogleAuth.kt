@@ -20,17 +20,17 @@ object GoogleAuth {
         cash = Cash(10000)
     }
 
-    fun getGoogleId(token: String): Result? {
+    fun getGoogleId(token: String): String? {
 
         var googleId = cash!![token]
-        if (googleId != null) return Result(googleId, true)
+        if (googleId != null) return googleId
 
         val json = requestTokenInfo(token)
         if (!verify(json!!) || !json.containsKey("sub")) return null
 
         googleId = json.getString("sub")
         cash!!.put(token, googleId)
-        return Result(googleId, false)
+        return googleId
 
 
     }
@@ -62,7 +62,5 @@ object GoogleAuth {
         }
         return null
     }
-
-    class Result(val googleId: String?, val fromCash: Boolean)
 
 }
