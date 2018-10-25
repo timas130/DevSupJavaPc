@@ -5,16 +5,16 @@ import java.sql.SQLException
 import java.util.ArrayList
 
 
-class PreparedQuery(private val closeable: Boolean, val query: String?) {
+class PreparedQuery(private val closeable: Boolean, val query: String?, val database:DatabaseInstance) {
     val statement: PreparedStatement
     var values: Array<out Any?>? = null
         private set
 
-    constructor(query: String?) : this(true, query) {}
+    constructor(query: String?, database:DatabaseInstance) : this(true, query, database) {}
 
     init {
         try {
-            statement = Database.connection!!.prepareStatement(query)
+            statement = database.connection!!.prepareStatement(query)
         } catch (e: SQLException) {
             throw RuntimeException(e)
         }
