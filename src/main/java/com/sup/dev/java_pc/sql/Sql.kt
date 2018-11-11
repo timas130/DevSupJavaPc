@@ -35,6 +35,9 @@ object Sql {
     fun SUM(column: String): String {
         return " SUM($column)"
     }
+    fun COUNT(column: String): String {
+        return " COUNT($column)"
+    }
 
     fun IF(param: Any, value: Any, ret1: Any, ret2: Any): String {
         return IF(param, "=", value, ret1, ret2)
