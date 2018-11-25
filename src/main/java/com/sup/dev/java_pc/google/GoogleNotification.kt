@@ -2,7 +2,9 @@ package com.sup.dev.java_pc.google
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.sup.dev.java.libs.debug.Debug
+
 import com.sup.dev.java.libs.json.Json
+import com.sup.dev.java.libs.json.JsonArray
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -15,7 +17,7 @@ object GoogleNotification {
 
     private val threadPool: ThreadPoolExecutor
 
-    private var onTokenNotFound: ((String)->Unit)? = null
+    private var onTokenNotFound: ((String) -> Unit)? = null
     private var urlKey: String? = null
     private var filePostfix: String = ""
 
@@ -23,28 +25,25 @@ object GoogleNotification {
         threadPool = ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
     }
 
-    fun init(urlKey: String, filePostfix: String ="") {
+    fun init(urlKey: String, filePostfix: String = "") {
         GoogleNotification.urlKey = urlKey
         GoogleNotification.filePostfix = filePostfix
     }
 
-    fun send(message: String, token: String) {
-        threadPool.execute { sendNow(message, token) }
+    fun send(message: String, vararg tokens: String) {
+        threadPool.execute { sendNow(message, *tokens) }
     }
 
-    fun sendNow(message: String, token: String) {
+    fun sendNow(message: String, vararg tokens: String) {
 
         try {
 
             val jsonRoot = Json()
                     .put("message", Json()
-                            .put("token", token)
-                            .put("android", Json()
-                                    .put("ttl", "20s"))
-                            .put("data", Json()
-                                    .put("my_data", message))
-                            .put("android", Json()
-                                    .put("priority", "high")))
+                            .put("tokens", JsonArray().put(*tokens))
+                            .put("android", Json().put("ttl", "20s"))
+                            .put("data", Json().put("my_data", message))
+                            .put("android", Json().put("priority", "high")))
 
             val googleCredential = GoogleCredential
                     .fromStream(FileInputStream(File("service-account$filePostfix.json")))
@@ -67,12 +66,24 @@ object GoogleNotification {
 
             val status = conn.responseCode
 
-            if (status == 404 && onTokenNotFound != null)
-                onTokenNotFound!!.invoke(token)
-            else if (status != 200) {
+            if (status != 200) {
                 Debug.print("Google notification sending error. code = $status")
                 val br = BufferedReader(InputStreamReader(conn.errorStream))
                 while (br.ready()) Debug.print(br.readLine())
+            } else {
+                val br = BufferedReader(InputStreamReader(conn.inputStream))
+                var s = ""
+                while (br.ready()) s += br.readLine()
+                val json = Json(s)
+                if (json.containsKey("errors")) {
+                    val jsons = json.getJsonArray("errors")!!
+                    for (i in 0 until jsons.size()) {
+                        val j = jsons.getJson(i)
+                        if (j.containsKey("token") && j.containsKey("error") && j.getString("error")!!.startsWith("bad registration id data: ")) {
+                            onTokenNotFound!!.invoke(j.getString("token")!!)
+                        }
+                    }
+                }
             }
 
         } catch (ex: IOException) {
@@ -81,7 +92,7 @@ object GoogleNotification {
 
     }
 
-    fun onTokenNotFound(onTokenNotFound: ((String)->Unit)) {
+    fun onTokenNotFound(onTokenNotFound: ((String) -> Unit)) {
         GoogleNotification.onTokenNotFound = onTokenNotFound
     }
 }
