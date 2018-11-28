@@ -1,6 +1,6 @@
 package com.sup.dev.java_pc.sql
 
-import java.util.ArrayList
+import java.util.*
 
 
 class SqlQuerySelect : SqlQueryWithWhere {
@@ -16,9 +16,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
     private var sortColumn: String? = null
     private var sortAB: Boolean = false
     private var distinct: Boolean = false
-
-    val columnsCount: Int
-        get() = columns.size
+    private var joinSelect: SqlQuerySelect? = null
 
     constructor(table: String) {
         this.table = table
@@ -42,7 +40,6 @@ class SqlQuerySelect : SqlQueryWithWhere {
                 columns.add(ColumnString(columnsArray[i].toString()))
     }
 
-
     fun where(columns: Any, condition: String, values: Any): SqlQuerySelect {
         return super.where(SqlWhere.WhereColumn(columns, condition, values, "AND")) as SqlQuerySelect
     }
@@ -53,6 +50,11 @@ class SqlQuerySelect : SqlQueryWithWhere {
 
     override fun where(vararg wheres: SqlWhere.Where): SqlQuerySelect {
         return super.where(*wheres) as SqlQuerySelect
+    }
+
+    fun join(select: SqlQuerySelect): SqlQuerySelect {
+        joinSelect = select
+        return this
     }
 
 
@@ -91,25 +93,46 @@ class SqlQuerySelect : SqlQueryWithWhere {
         var sql = Sql.SELECT
         if (distinct)
             sql += Sql.DISTINCT
+        var index = 0
         for (i in columns.indices) {
-            if (i != 0) {
-                sql += ","
+            if (index++ != 0) sql += ","
+            val s = columns[i].toQuery()
+            if (joinSelect == null || s.startsWith("(")) sql += s
+            else sql += "$table.$s"
+        }
+        if (joinSelect != null) {
+            for (i in joinSelect!!.columns.indices) {
+                if (index++ != 0) sql += ","
+                val s = joinSelect!!.columns[i].toQuery()
+                if (s.startsWith("(")) sql += s
+                else sql += joinSelect!!.table + "." + s
+
             }
-            sql += columns[i].toQuery()
         }
         sql += Sql.FROM + table!!
-        sql += whereString
-        if (groupColumn != null)
-            sql += Sql.GROUP + groupColumn!!
-        if (sortColumn != null)
-            sql += Sql.ORDER + sortColumn + if (sortAB) Sql.ASC else Sql.DESC
-        if (limited)
-            sql += Sql.LIMIT + limited_offset + "," + limited_count
+
+        var where = createWhere()
+
+        if (joinSelect != null) {
+            sql += " INNER JOIN " + joinSelect!!.table
+            where = where.replace("WHERE ", "ON ")
+        }
+
+        sql += where
+        if (groupColumn != null) sql += Sql.GROUP + groupColumn!!
+        if (sortColumn != null) sql += Sql.ORDER + sortColumn + if (sortAB) Sql.ASC else Sql.DESC
+        if (limited) sql += Sql.LIMIT + limited_offset + "," + limited_count
+
         return sql
     }
 
     fun setTable(table: String) {
         this.table = table
+    }
+
+    fun getColumnsCount():Int{
+        return if(joinSelect == null) columns.size
+        else columns.size + joinSelect!!.getColumnsCount()
     }
 
     //

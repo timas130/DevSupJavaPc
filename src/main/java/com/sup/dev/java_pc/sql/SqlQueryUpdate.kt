@@ -39,7 +39,7 @@ class SqlQueryUpdate(private val table: String, vararg columns: Any) : SqlQueryW
         val sql = StringBuilder(Sql.UPDATE + table + Sql.SET + columns[0].toQuery())
         for (i in 1 until columns.size)
             sql.append(",").append(columns[i].toQuery())
-        sql.append(whereString)
+        sql.append(createWhere())
         return sql.toString()
     }
 

@@ -68,7 +68,7 @@ class DatabaseInstance {
         try {
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
-            return select(preparedQuery, query.columnsCount)
+            return select(preparedQuery, query.getColumnsCount())
         } catch (e: SQLException) {
             if (!SALIENT) {
                 Debug.print(query.getQuery())

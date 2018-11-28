@@ -9,27 +9,25 @@ abstract class SqlQueryWithWhere : SqlQuery() {
     private val wheres = ArrayList<SqlWhere>()
     private var mainConditionsIndex: Int = 0
 
-    protected val whereString: String
-        get() {
-            val whereString = StringBuilder()
-            if (mainConditionsIndex > 0)
-                whereString.append("(")
-            for (i in wheres.indices) {
-                if (mainConditionsIndex > 0 && i == mainConditionsIndex)
-                    whereString.append(")")
-                whereString.append(wheres[i].toQuery(i != 0))
-            }
-            return if (whereString.length != 0)
-                Sql.WHERE + whereString
-            else
-                whereString.toString()
-        }
-
     init {
         wheres.add(currentWhere)
     }
 
-    @JvmOverloads
+    fun createWhere() : String{
+        val whereString = StringBuilder()
+        if (mainConditionsIndex > 0)
+            whereString.append("(")
+        for (i in wheres.indices) {
+            if (mainConditionsIndex > 0 && i == mainConditionsIndex)
+                whereString.append(")")
+            whereString.append(wheres[i].toQuery(i != 0))
+        }
+        return if (whereString.isNotEmpty())
+            Sql.WHERE + whereString
+        else
+            whereString.toString()
+    }
+
     fun nextWhere(link: String, main: Boolean = false) {
         if (currentWhere.wheresCount == 0)
             wheres.remove(currentWhere)
