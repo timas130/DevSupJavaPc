@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.yandex
 
 import com.sup.dev.java.libs.debug.Debug
+import com.sup.dev.java.libs.debug.info
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.IOException
@@ -14,7 +15,7 @@ class YandexTranslate {
 
     @Throws(IOException::class)
     fun translate(targetLang: String, input: String): String {
-        Debug.print(targetLang, input)
+        info(targetLang, input)
         val urlStr = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180417T025628Z.c947d37bbba4cd90.5441a8db317dd6d5dd48210958933cda684e01ea"
         val urlObj = URL(urlStr)
         val connection = urlObj.openConnection() as HttpsURLConnection
@@ -31,7 +32,7 @@ class YandexTranslate {
             return json.substring(start + 2, end - 1)
         } catch (e: IOException) {
             val br = BufferedReader(InputStreamReader(connection.errorStream))
-            while (br.ready()) Debug.print(br.readLine())
+            while (br.ready()) info(br.readLine())
             throw e
         }
 

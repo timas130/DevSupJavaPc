@@ -2,6 +2,7 @@ package com.sup.dev.java_pc.sql
 
 import com.sup.dev.java.classes.collections.AnyArray
 import com.sup.dev.java.libs.debug.Debug
+import com.sup.dev.java.libs.debug.info
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Connection
@@ -71,8 +72,8 @@ class DatabaseInstance {
             return select(preparedQuery, query.getColumnsCount())
         } catch (e: SQLException) {
             if (!SALIENT) {
-                Debug.print(query.getQuery())
-                Debug.print(values)
+                info(query.getQuery())
+                info(values)
             }
             throw RuntimeException(e)
         }
@@ -87,8 +88,8 @@ class DatabaseInstance {
             return select(preparedQuery, columnsCount)
         } catch (e: SQLException) {
             if (!SALIENT) {
-                Debug.print(query)
-                Debug.print(values)
+               info(query)
+               info(values)
             }
             throw RuntimeException(e)
         }
@@ -112,9 +113,9 @@ class DatabaseInstance {
             return ResultRows(list.size() / columnsCount, list)
         } catch (e: SQLException) {
             if (!SALIENT) {
-                Debug.print(query.query)
-                if (query.values == null) Debug.print("null")
-                else Debug.print(query.values)
+                info(query.query)
+                if (query.values == null) info("null")
+                else info(query.values)
             }
             throw RuntimeException(e)
         }
@@ -134,8 +135,8 @@ class DatabaseInstance {
             return count
         } catch (e: SQLException) {
             if (!SALIENT) {
-                Debug.print(query.getQuery())
-                Debug.print(*values)
+                info(query.getQuery())
+                info(*values)
             }
             throw RuntimeException(e)
         }
@@ -154,8 +155,8 @@ class DatabaseInstance {
             preparedQuery.closeIfNeed()
         } catch (e: SQLException) {
             if (!SALIENT) {
-                Debug.print(query.getQuery())
-                Debug.print(*values)
+                info(query.getQuery())
+                info(*values)
             }
             throw RuntimeException(e)
         }
@@ -175,8 +176,8 @@ class DatabaseInstance {
             preparedQuery.closeIfNeed()
         } catch (e: SQLException) {
             if (!SALIENT) {
-                Debug.print(query)
-                Debug.print(*values)
+                info(query)
+                info(*values)
             }
             throw RuntimeException(e)
         }

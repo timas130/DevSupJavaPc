@@ -1,10 +1,9 @@
 package com.sup.dev.java_pc.google
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
-import com.sup.dev.java.libs.debug.Debug
-
+import com.sup.dev.java.libs.debug.info
+import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.libs.json.JsonArray
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -31,16 +30,18 @@ object GoogleNotification {
     }
 
     fun send(message: String, vararg tokens: String) {
-        threadPool.execute { sendNow(message, *tokens) }
+        threadPool.execute {
+            for (token in tokens) sendNow(message, token)
+        }
     }
 
-    fun sendNow(message: String, vararg tokens: String) {
+    fun sendNow(message: String, token: String) {
 
         try {
 
             val jsonRoot = Json()
                     .put("message", Json()
-                            .put("tokens", JsonArray().put(*tokens))
+                            .put("token", token)
                             .put("android", Json().put("ttl", "20s"))
                             .put("data", Json().put("my_data", message))
                             .put("android", Json().put("priority", "high")))
@@ -66,11 +67,7 @@ object GoogleNotification {
 
             val status = conn.responseCode
 
-            if (status != 200) {
-                Debug.print("Google notification sending error. code = $status")
-                val br = BufferedReader(InputStreamReader(conn.errorStream))
-                while (br.ready()) Debug.print(br.readLine())
-            } else {
+            if (status == 200) {
                 val br = BufferedReader(InputStreamReader(conn.inputStream))
                 var s = ""
                 while (br.ready()) s += br.readLine()
@@ -84,10 +81,17 @@ object GoogleNotification {
                         }
                     }
                 }
+            } else if(status == 404) {
+                onTokenNotFound!!.invoke(token)
+            } else {
+                info("Google notification sending error. code = $status")
+                val br = BufferedReader(InputStreamReader(conn.errorStream))
+                while (br.ready()) info(br.readLine())
+
             }
 
         } catch (ex: IOException) {
-            Debug.log(ex)
+            log(ex)
         }
 
     }
