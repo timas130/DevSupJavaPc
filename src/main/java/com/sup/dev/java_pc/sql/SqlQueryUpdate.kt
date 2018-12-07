@@ -20,6 +20,14 @@ class SqlQueryUpdate(private val table: String, vararg columns: Any) : SqlQueryW
         }
     }
 
+    override fun where(vararg wheres: SqlWhere.Where): SqlQueryUpdate {
+        return super.where(*wheres) as SqlQueryUpdate
+    }
+
+    override fun where(columns: Any, condition: String, values: Any, link: String): SqlQueryUpdate {
+        return super.where(columns, condition, values, link) as SqlQueryUpdate
+    }
+
     fun addUpdate(updateColumn: UpdateColumn): SqlQueryUpdate {
         columns.add(updateColumn)
         return this

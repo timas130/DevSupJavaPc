@@ -1,8 +1,7 @@
 package com.sup.dev.java_pc.google
 
-import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.log
+import com.sup.dev.java.libs.debug.error
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonArray
 import java.io.*
@@ -80,7 +79,7 @@ object GoogleNotification {
             }
 
         } catch (ex: IOException) {
-            log(ex)
+            error(ex)
         }
 
     }

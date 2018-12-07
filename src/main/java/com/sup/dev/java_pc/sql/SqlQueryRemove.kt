@@ -7,4 +7,12 @@ class SqlQueryRemove(private val table: String) : SqlQueryWithWhere() {
         return Sql.DELETE + table + createWhere()
     }
 
+
+    override fun where(vararg wheres: SqlWhere.Where): SqlQueryRemove {
+        return super.where(*wheres) as SqlQueryRemove
+    }
+
+    override fun where(columns: Any, condition: String, values: Any, link: String): SqlQueryRemove {
+        return super.where(columns, condition, values, link) as SqlQueryRemove
+    }
 }
