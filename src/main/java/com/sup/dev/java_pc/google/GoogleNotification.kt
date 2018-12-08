@@ -1,7 +1,6 @@
 package com.sup.dev.java_pc.google
 
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.error
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonArray
 import java.io.*
@@ -24,7 +23,20 @@ object GoogleNotification {
     }
 
     fun send(message: String, vararg tokens: String) {
-        threadPool.execute { sendNow(message, *tokens) }
+        threadPool.execute {
+            val max = 25
+            var count = 0
+            while (count < tokens.size){
+                if(tokens.size - count <= max) {
+                    sendNow(message, *tokens)
+                    count = tokens.size
+                } else {
+                    sendNow(message, *tokens.copyOfRange(count, count+max))
+                    count += max
+                }
+            }
+
+        }
     }
 
     fun sendNow(message: String, vararg tokens: String) {
