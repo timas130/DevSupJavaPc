@@ -78,17 +78,17 @@ class GoogleMail(private val username: String, private val password: String) {
             Json jsonRoot = new Json();
             jsonRoot.put("message", json);
 
-            Debug.error(jsonRoot);
+            err(jsonRoot);
 
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(jsonRoot.toString());
             wr.flush();
 
             int status = conn.getResponseCode();
-            if (status != 0) Debug.error("Google notification sending error. code = " + status);
+            if (status != 0) err("Google notification sending error. code = " + status);
 
         } catch (IOException ex){
-            Debug.error(ex);
+            err(ex);
         }
 
     }

@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.google
 
 import com.sup.dev.java.classes.collections.Cash
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
 import java.io.BufferedReader
 import java.io.IOException
@@ -48,13 +49,13 @@ object GoogleAuth {
 
             return Json(s)
         } catch (e: Exception) {
-            error(e)
+            err(e)
         } finally {
             if (inp != null) {
                 try {
                     inp.close()
                 } catch (e: IOException) {
-                    error(e)
+                    err(e)
                 }
 
             }
