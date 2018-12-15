@@ -97,14 +97,14 @@ class SqlQuerySelect : SqlQueryWithWhere {
         for (i in columns.indices) {
             if (index++ != 0) sql += ","
             val s = columns[i].toQuery()
-            if (joinSelect == null || s.startsWith("(")) sql += s
+            if (joinSelect == null || s.startsWith("(") || s.startsWith(" ")) sql += s
             else sql += "$table.$s"
         }
         if (joinSelect != null) {
             for (i in joinSelect!!.columns.indices) {
                 if (index++ != 0) sql += ","
                 val s = joinSelect!!.columns[i].toQuery()
-                if (s.startsWith("(")) sql += s
+                if (s.startsWith("(") || s.startsWith(" ")) sql += s
                 else sql += joinSelect!!.table + "." + s
 
             }
@@ -130,8 +130,8 @@ class SqlQuerySelect : SqlQueryWithWhere {
         this.table = table
     }
 
-    fun getColumnsCount():Int{
-        return if(joinSelect == null) columns.size
+    fun getColumnsCount(): Int {
+        return if (joinSelect == null) columns.size
         else columns.size + joinSelect!!.getColumnsCount()
     }
 
