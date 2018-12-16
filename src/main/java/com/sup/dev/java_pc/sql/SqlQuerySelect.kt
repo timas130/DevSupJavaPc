@@ -79,13 +79,18 @@ class SqlQuerySelect : SqlQueryWithWhere {
         return this
     }
 
-    fun setGroupColumn(groupColumn: String): SqlQuerySelect {
+    fun groupBy(groupColumn: String): SqlQuerySelect {
         this.groupColumn = groupColumn
         return this
     }
 
     fun setDistinct(distinct: Boolean): SqlQuerySelect {
         this.distinct = distinct
+        return this
+    }
+
+    fun setTable(table: String): SqlQuerySelect  {
+        this.table = table
         return this
     }
 
@@ -124,10 +129,6 @@ class SqlQuerySelect : SqlQueryWithWhere {
         if (limited) sql += Sql.LIMIT + limited_offset + "," + limited_count
 
         return sql
-    }
-
-    fun setTable(table: String) {
-        this.table = table
     }
 
     fun getColumnsCount(): Int {

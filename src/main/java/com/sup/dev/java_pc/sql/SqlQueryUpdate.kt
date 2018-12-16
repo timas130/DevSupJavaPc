@@ -12,9 +12,9 @@ class SqlQueryUpdate(private val table: String, vararg columns: Any) : SqlQueryW
     init {
         for (i in columns.indices) {
             if (columns[i] is UpdateColumn)
-                addUpdate(columns[i] as UpdateColumn)
+                update(columns[i] as UpdateColumn)
             else if (columns[i] is String)
-                addUpdate(UpdateColumnSimple(columns[i] as String))
+                update(UpdateColumnSimple(columns[i] as String))
             else
                 throw RuntimeException("Bad field type [" + columns[i] + "]")
         }
@@ -28,17 +28,17 @@ class SqlQueryUpdate(private val table: String, vararg columns: Any) : SqlQueryW
         return super.where(columns, condition, values, link) as SqlQueryUpdate
     }
 
-    fun addUpdate(updateColumn: UpdateColumn): SqlQueryUpdate {
+    fun update(updateColumn: UpdateColumn): SqlQueryUpdate {
         columns.add(updateColumn)
         return this
     }
 
-    fun addUpdate(column: String): SqlQueryUpdate {
+    fun update(column: String): SqlQueryUpdate {
         columns.add(UpdateColumnSimple(column))
         return this
     }
 
-    fun addUpdate(column: String, values: Any): SqlQueryUpdate {
+    fun update(column: String, values: Any): SqlQueryUpdate {
         columns.add(UpdateColumnSimple(column, values))
         return this
     }
