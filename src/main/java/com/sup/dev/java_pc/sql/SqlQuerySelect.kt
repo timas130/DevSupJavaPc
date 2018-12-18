@@ -40,6 +40,11 @@ class SqlQuerySelect : SqlQueryWithWhere {
                 columns.add(ColumnString(columnsArray[i].toString()))
     }
 
+    fun addColumn(column:String):SqlQuerySelect{
+        columns.add(ColumnString(column))
+        return this
+    }
+
     fun where(columns: Any, condition: String, values: Any): SqlQuerySelect {
         return super.where(SqlWhere.WhereColumn(columns, condition, values, "AND")) as SqlQuerySelect
     }
