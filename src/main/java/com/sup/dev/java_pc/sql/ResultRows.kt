@@ -20,7 +20,11 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
         return s.toString()
     }
 
-    operator fun <K> next(): K? {
+    operator fun <K> next(): K {
+        return values.next<K>()!!
+    }
+
+    fun <K> nextMayNull(): K? {
         return values.next<K>()
     }
 
@@ -29,7 +33,7 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
     }
 
     fun longOrZero(): Long {
-        return if (hasNext()) next()!!
+        return if (hasNext()) next()
         else 0L
     }
 
