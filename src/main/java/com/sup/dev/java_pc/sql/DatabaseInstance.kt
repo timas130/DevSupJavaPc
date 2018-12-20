@@ -41,21 +41,19 @@ class DatabaseInstance {
     }
 
     fun insert(tableName: String, vararg o: Any?): Long {
-        val columns = arrayOfNulls<String>(o.size / 2)
-        val values = arrayOfNulls<Any>(o.size / 2)
+        val columns = ArrayList<String>()
+        val values = ArrayList<Any?>()
 
-        var c = 0
-        var v = 0
         for (i in o.indices) {
-            if (i % 2 == 1)
-                values[v++] = o[i]
-            else
-                columns[c++] = o[i] as String
+            if (i % 2 == 1) values.add(o[i])
+            else columns.add(o[i] as String)
         }
 
-        val insert = SqlQueryInsert(tableName, *columns)
 
-        return insert(insert, *values)
+        val insert = SqlQueryInsert(tableName)
+        for(i in columns) insert.put(i, "?")
+
+        return insert(insert, *values.toTypedArray())
     }
 
 
@@ -102,11 +100,11 @@ class DatabaseInstance {
             val list = AnyArray()
             while (rs.next()) {
                 for (i in 1 until columnsCount + 1) {
-                    val `object` = rs.getObject(i)
-                    if (`object` is BigDecimal)
-                        list.add(`object`.toInt())
+                    val ob = rs.getObject(i)
+                    if (ob is BigDecimal)
+                        list.add(ob.toInt())
                     else
-                        list.add(`object`)
+                        list.add(ob)
                 }
             }
             query.closeIfNeed()

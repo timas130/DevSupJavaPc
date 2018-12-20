@@ -25,7 +25,7 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
     }
 
     fun <K> nextMayNull(): K? {
-        return values.next<K>()
+        return values.nextMayNull<K>()
     }
 
     operator fun hasNext(): Boolean {

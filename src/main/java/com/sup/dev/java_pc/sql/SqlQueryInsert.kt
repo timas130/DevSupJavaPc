@@ -1,21 +1,15 @@
 package com.sup.dev.java_pc.sql
 
 
-class SqlQueryInsert(private val table: String, vararg val columns: String?) : SqlQuery() {
-    private val values: Array<String?> = arrayOfNulls(columns.size)
+class SqlQueryInsert(private val table: String) : SqlQuery() {
 
-    init {
-        for (i in values.indices)
-            values[i] = "?"
-    }
+    private val columns = ArrayList<String>()
+    private val values = ArrayList<String>()
 
-
-    fun setValue(index: Int, query: SqlQuerySelect) {
-        values[index] = "(" + query.getQuery() + ")"
-    }
-
-    fun setValue(index: Int, value: String) {
-        values[index] = value
+    fun put(column: String, value: Any): SqlQueryInsert {
+        columns.add(column)
+        values.add(value.toString())
+        return this
     }
 
     override fun createQuery(): String {
