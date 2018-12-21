@@ -38,7 +38,10 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
     }
 
     fun sumOrZero(): Long {
-        return if (hasNext()) Sql.parseSum(next<Any>())
+        return if (hasNext()) {
+            val x = nextMayNull<Any>() ?: return 0L
+            Sql.parseSum(x)
+        }
         else 0L
     }
 
