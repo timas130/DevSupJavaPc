@@ -35,6 +35,19 @@ object Sql {
     fun SUM(column: String): String {
         return " SUM($column)"
     }
+
+    fun MIN(column: String): String {
+        return " MIN($column)"
+    }
+
+    fun MAX(column: String): String {
+        return " MAX($column)"
+    }
+
+    fun AVG(column: String): String {
+        return " AVG($column)"
+    }
+
     fun COUNT(column: String): String {
         return " COUNT($column)"
     }
