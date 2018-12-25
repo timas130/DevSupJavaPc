@@ -1,6 +1,5 @@
 package com.sup.dev.java_pc.views.widgets
 
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java_pc.tools.ToolsImage
 import com.sup.dev.java_pc.views.GUI
 import java.awt.*
