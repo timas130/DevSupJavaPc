@@ -67,7 +67,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
         return offset_count(limited_offset, count)
     }
 
-    fun offset(offset: Int): SqlQuerySelect {
+    fun offset(offset: Long): SqlQuerySelect {
         return offset_count(offset, limited_count)
     }
 
