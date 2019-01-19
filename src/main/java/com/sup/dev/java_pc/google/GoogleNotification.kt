@@ -23,25 +23,20 @@ object GoogleNotification {
         GoogleNotification.apiKey = apiKey
     }
 
-    fun send(message: String, vararg tokens: String) {
+    fun send(message: String, tokens: Array<String>) {
         threadPool.execute {
             val max = 25
-            var count = 0
-            while (count < tokens.size){
-                if(tokens.size - count <= max) {
-                    sendNow(message, *tokens)
-                    count = tokens.size
-                } else {
-                    sendNow(message, *tokens.copyOfRange(count, count+max))
-                    count += max
-                }
+            var position = 0
+            while (position < tokens.size){
+                val end = position + max
+                sendNow(message, tokens.copyOfRange(position, Math.min(tokens.size, end)))
+                position += max
             }
 
         }
     }
 
-    fun sendNow(message: String, vararg tokens: String) {
-
+    fun sendNow(message: String,  tokens: Array<String>) {
         try {
 
             val jsonRoot = Json()
