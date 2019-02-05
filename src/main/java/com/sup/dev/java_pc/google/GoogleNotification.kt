@@ -42,6 +42,7 @@ object GoogleNotification {
             val jsonRoot = Json()
                     .put("registration_ids", JsonArray().put(*tokens))
                     .put("data", Json().put("my_data", message))
+                    .put("time_to_live", 30)
 
             val url = URL("https://fcm.googleapis.com/fcm/send")
             val conn = url.openConnection() as HttpURLConnection
