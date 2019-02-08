@@ -28,6 +28,11 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
         return values.nextMayNull<K>()
     }
 
+    fun <K> nextMayNullOrNull(): K? {
+        if(!hasNext()) return null
+        return values.nextMayNull<K>()
+    }
+
     operator fun hasNext(): Boolean {
         return values.hasNext()
     }
