@@ -14,6 +14,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
     private var limited_count: Any = 0
     private var groupColumn: String? = null
     private var sortColumn: String? = null
+    private var sortColumnSecond: String? = null
     private var sortAB: Boolean = false
     private var distinct: Boolean = false
     private var joinSelect: SqlQuerySelect? = null
@@ -40,7 +41,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
                 columns.add(ColumnString(columnsArray[i].toString()))
     }
 
-    fun addColumn(column:String):SqlQuerySelect{
+    fun addColumn(column: String): SqlQuerySelect {
         columns.add(ColumnString(column))
         return this
     }
@@ -78,8 +79,9 @@ class SqlQuerySelect : SqlQueryWithWhere {
         return this
     }
 
-    fun sort(sortColumn: String, sortAB: Boolean): SqlQuerySelect {
+    fun sort(sortColumn: String, sortAB: Boolean, sortColumnSecond: String? = null): SqlQuerySelect {
         this.sortColumn = sortColumn
+        this.sortColumnSecond = sortColumnSecond
         this.sortAB = sortAB
         return this
     }
@@ -94,7 +96,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
         return this
     }
 
-    fun setTable(table: String): SqlQuerySelect  {
+    fun setTable(table: String): SqlQuerySelect {
         this.table = table
         return this
     }
@@ -130,7 +132,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
 
         sql += where
         if (groupColumn != null) sql += Sql.GROUP + groupColumn!!
-        if (sortColumn != null) sql += Sql.ORDER + sortColumn + if (sortAB) Sql.ASC else Sql.DESC
+        if (sortColumn != null) sql += Sql.ORDER + sortColumn + if (sortAB) Sql.ASC else Sql.DESC + if (sortColumnSecond != null) ", $sortColumnSecond" else ""
         if (limited) sql += Sql.LIMIT + limited_offset + "," + limited_count
 
         return sql
