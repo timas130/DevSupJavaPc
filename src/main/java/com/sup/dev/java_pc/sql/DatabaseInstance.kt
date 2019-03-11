@@ -96,7 +96,9 @@ class DatabaseInstance {
 
     private fun select(query: PreparedQuery, columnsCount: Int): ResultRows {
         try {
-            val rs = query.statement.executeQuery()
+            var rs = query.statement.executeQuery()             //  Try 1
+            if(rs == null)rs = query.statement.executeQuery()   //  Try 2
+            if(rs == null)rs = query.statement.executeQuery()   //  Try 3
             val list = AnyArray()
             while (rs.next()) {
                 for (i in 1 until columnsCount + 1) {
