@@ -34,13 +34,25 @@ class DatabaseInstance {
     //  Insert
     //
 
-    fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
+    fun insert(query: SqlQueryInsert, vararg values: Any?) {
         execute(query.getQuery(), *values)
+    }
+
+    fun insertWithId(query: SqlQueryInsert, vararg values: Any?): Long {
+        insert(query, *values)
         val result = select(selectLastInsert!!, 1)
         return if (result.values.get<Any>(0) is BigInteger) (result.values.get<Any>(0) as BigInteger).toInt().toLong() else result.values.get<Any>(0) as Long
     }
 
-    fun insert(tableName: String, vararg o: Any?): Long {
+    fun insert(tableName: String, vararg o: Any?) {
+        insertNow(tableName, false, *o)
+    }
+
+    fun insertWithId(tableName: String, vararg o: Any?): Long {
+        return insertNow(tableName, true, *o)
+    }
+
+    private fun insertNow(tableName: String, id: Boolean, vararg o: Any?): Long {
         val columns = ArrayList<String>()
         val values = ArrayList<Any?>()
 
@@ -51,12 +63,16 @@ class DatabaseInstance {
 
 
         val insert = SqlQueryInsert(tableName)
-        for(i in columns) insert.put(i, "?")
+        for (i in columns) insert.put(i, "?")
 
-        return insert(insert, *values.toTypedArray())
+        if (id)
+            return insertWithId(insert, *values.toTypedArray())
+        else {
+            insert(insert, *values.toTypedArray())
+            return 0
+        }
+
     }
-
-
 
     //
     //  Select
@@ -86,8 +102,8 @@ class DatabaseInstance {
             return select(preparedQuery, columnsCount)
         } catch (e: SQLException) {
             if (!SALIENT) {
-               info(query)
-               info(values)
+                info(query)
+                info(values)
             }
             throw RuntimeException(e)
         }
@@ -97,8 +113,8 @@ class DatabaseInstance {
     private fun select(query: PreparedQuery, columnsCount: Int): ResultRows {
         try {
             var rs = query.statement.executeQuery()             //  Try 1
-            if(rs == null)rs = query.statement.executeQuery()   //  Try 2
-            if(rs == null)rs = query.statement.executeQuery()   //  Try 3
+            if (rs == null) rs = query.statement.executeQuery()   //  Try 2
+            if (rs == null) rs = query.statement.executeQuery()   //  Try 3
             val list = AnyArray()
             while (rs.next()) {
                 for (i in 1 until columnsCount + 1) {
