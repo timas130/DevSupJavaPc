@@ -2,19 +2,31 @@ package com.sup.dev.java_pc.sql
 
 import java.sql.PreparedStatement
 import java.sql.SQLException
+import java.sql.Statement
 import java.util.ArrayList
 
 
-class PreparedQuery(private val closeable: Boolean, val query: String?, val database:DatabaseInstance) {
+class PreparedQuery(
+        private val closeable: Boolean,
+        val query: String?,
+        val database:DatabaseInstance,
+        val isInsert:Boolean=false
+) {
     val statement: PreparedStatement
     var values: Array<out Any?>? = null
         private set
 
     constructor(query: String?, database:DatabaseInstance) : this(true, query, database) {}
 
+    constructor(query: String?, database:DatabaseInstance, isInsert:Boolean) : this(true, query, database, isInsert) {}
+
     init {
         try {
-            statement = database.connection!!.prepareStatement(query)
+            if(!isInsert) {
+                statement = database.connection!!.prepareStatement(query)
+            }else{
+                statement = database.connection!!.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
+            }
         } catch (e: SQLException) {
             throw RuntimeException(e)
         }

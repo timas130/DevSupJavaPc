@@ -15,24 +15,13 @@ object Database {
     //  Insert
     //
 
-    fun insert(query: SqlQueryInsert, vararg values: Any?) {
-        instance!!.insert(query, values)
+    fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
+        return instance!!.insert(query, values)
     }
 
-
-    fun insertWithId(query: SqlQueryInsert, vararg values: Any?): Long {
-        return instance!!.insertWithId(query, values)
+    fun insert(tableName: String, vararg o: Any?): Long {
+        return instance!!.insert(tableName, *o)
     }
-
-    fun insert(tableName: String, vararg o: Any?) {
-        instance!!.insert(tableName, *o)
-    }
-
-    fun insertWithId(tableName: String, vararg o: Any?): Long {
-        return instance!!.insertWithId(tableName, *o)
-    }
-
-
 
     //
     //  Select

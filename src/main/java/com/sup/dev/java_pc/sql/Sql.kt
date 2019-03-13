@@ -20,9 +20,6 @@ object Sql {
     val ASC = " ASC "
     val DESC = " DESC "
 
-
-    val SELECT_LAST_ID = "SELECT LAST_INSERT_ID()"
-
     fun prepareColumns(vararg columns: String): String {
         if (columns.isEmpty())
             return ""
