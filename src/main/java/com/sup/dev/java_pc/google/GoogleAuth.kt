@@ -26,7 +26,10 @@ object GoogleAuth {
         if (googleId != null) return googleId
 
         val json = requestTokenInfo(token)
-        if (!verify(json!!) || !json.containsKey("sub")) return null
+        if (json == null ||
+                !verify(json) ||
+                !json.containsKey("sub")
+        ) return null
 
         googleId = json.getString("sub")
         cash!!.put(token, googleId)
