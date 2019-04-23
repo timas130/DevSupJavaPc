@@ -109,7 +109,7 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
     }
 
     internal fun onTextChanged() {
-        onChanged.callback(text)
+        onChanged.invoke(text)
         if (localOnTextChanged != null) localOnTextChanged!!.invoke()
         if (errorChecker != null) setErrorState(errorChecker!!.invoke(text))
     }
