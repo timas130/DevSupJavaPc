@@ -38,7 +38,7 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
     }
 
     fun longOrZero(): Long {
-        return if (hasNext()) next()
+        return if (hasNext()) nextMayNull()?:0L
         else 0L
     }
 
