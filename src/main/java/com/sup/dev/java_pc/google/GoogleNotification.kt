@@ -2,7 +2,6 @@ package com.sup.dev.java_pc.google
 
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonArray
 import java.io.*
@@ -59,7 +58,6 @@ object GoogleNotification {
             wr.flush()
 
             val status = conn.responseCode
-            log("sendNow", status)
 
             if (status == 200) {
                 val br = BufferedReader(InputStreamReader(conn.inputStream))
