@@ -41,8 +41,8 @@ abstract class SqlQueryWithWhere : SqlQuery() {
         return where(SqlWhere.WhereColumn(columns, condition, values, link))
     }
 
-    open fun where(vararg wheres: SqlWhere.Where): SqlQueryWithWhere {
-        currentWhere.addWhere(*wheres)
+    open fun where(where: SqlWhere.Where): SqlQueryWithWhere {
+        currentWhere.addWhere(where)
         return this
     }
 

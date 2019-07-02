@@ -24,9 +24,9 @@ class SqlWhere {
             addWhere(where)
     }
 
-    internal fun addWhere(vararg wheres: Where) {
+    internal fun addWhere(where: Where) {
         used = true
-        Collections.addAll(this.wheres, *wheres)
+        this.wheres.add(where)
     }
 
     internal fun toQuery(useLink: Boolean): String {

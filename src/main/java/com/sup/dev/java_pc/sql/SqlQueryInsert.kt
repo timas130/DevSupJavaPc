@@ -12,6 +12,14 @@ class SqlQueryInsert(private val table: String) : SqlQuery() {
         return this
     }
 
+    fun putValue(column: String, value: Any): SqlQueryInsert {
+        return put(column, "?").value(value)
+    }
+
+    override fun value(v: Any): SqlQueryInsert {
+        return super.value(v) as SqlQueryInsert
+    }
+
     override fun createQuery(): String {
         var sql = Sql.INSERT + table + "("
         var valuesString = Sql.VALUES + "("

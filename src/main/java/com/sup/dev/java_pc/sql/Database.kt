@@ -15,8 +15,8 @@ object Database {
     //  Insert
     //
 
-    fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
-        return instance!!.insert(query, values)
+    fun insert(query: SqlQueryInsert): Long {
+        return instance!!.insert(query, query.requestValues.toTypedArray())
     }
 
     fun insert(tableName: String, vararg o: Any?): Long {
@@ -27,8 +27,8 @@ object Database {
     //  Select
     //
 
-    fun select(query: SqlQuerySelect, vararg values: Any?): ResultRows {
-        return instance!!.select(query, values)
+    fun select(query: SqlQuerySelect): ResultRows {
+        return instance!!.select(query, query.requestValues.toTypedArray())
 
     }
 
@@ -40,16 +40,16 @@ object Database {
     //  Update
     //
 
-    fun update(query: SqlQueryUpdate, vararg values: Any): Int {
-        return instance!!.update(query, *values)
+    fun update(query: SqlQueryUpdate): Int {
+        return instance!!.update(query, query.requestValues.toTypedArray())
     }
 
     //
     //  Delete
     //
 
-    fun remove(query: SqlQueryRemove, vararg values: Any) {
-        return instance!!.remove(query, *values)
+    fun remove(query: SqlQueryRemove) {
+        return instance!!.remove(query, query.requestValues.toTypedArray())
     }
 
 

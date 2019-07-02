@@ -46,16 +46,24 @@ class SqlQuerySelect : SqlQueryWithWhere {
         return this
     }
 
-    fun where(columns: Any, condition: String, values: Any): SqlQuerySelect {
-        return super.where(SqlWhere.WhereColumn(columns, condition, values, "AND")) as SqlQuerySelect
+    fun where(columns: Any, condition: String, value: Any): SqlQuerySelect {
+        return super.where(SqlWhere.WhereColumn(columns, condition, value, "AND")) as SqlQuerySelect
+    }
+
+    fun whereValue(columns: Any, condition: String, value: Any): SqlQuerySelect {
+        return where(columns, condition, "?").value(value)
     }
 
     override fun where(columns: Any, condition: String, values: Any, link: String): SqlQuerySelect {
         return super.where(SqlWhere.WhereColumn(columns, condition, values, link)) as SqlQuerySelect
     }
 
-    override fun where(vararg wheres: SqlWhere.Where): SqlQuerySelect {
-        return super.where(*wheres) as SqlQuerySelect
+    override fun where(where: SqlWhere.Where): SqlQuerySelect {
+        return super.where(where) as SqlQuerySelect
+    }
+
+    fun whereValue(where: SqlWhere.Where, value:Any): SqlQuerySelect {
+        return where(where).value(value)
     }
 
     fun join(select: SqlQuerySelect): SqlQuerySelect {
@@ -63,6 +71,9 @@ class SqlQuerySelect : SqlQueryWithWhere {
         return this
     }
 
+    override fun value(v:Any):SqlQuerySelect{
+        return super.value(v) as SqlQuerySelect
+    }
 
     fun count(count: Int): SqlQuerySelect {
         return offset_count(limited_offset, count)
