@@ -37,7 +37,7 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
         return values.hasNext()
     }
 
-    fun longOrZero(): Long {
+    fun nextLongOrZero(): Long {
         return if (hasNext()) nextMayNull()?:0L
         else 0L
     }
