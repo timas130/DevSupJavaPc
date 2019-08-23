@@ -68,8 +68,8 @@ object GoogleNotification {
                     val jsons = json.getJsonArray("errors")!!
                     for (i in 0 until jsons.size()) {
                         val j = jsons.getJson(i)
-                        if (j.containsKey("token") && j.containsKey("error") && j.getString("error")!!.startsWith("bad registration id data: ")) {
-                            onTokenNotFound!!.invoke(j.getString("token")!!)
+                        if (j.containsKey("token") && j.containsKey("error") && j.getString("error").startsWith("bad registration id data: ")) {
+                            onTokenNotFound!!.invoke(j.getString("token"))
                         }
                     }
                 } else if (json.containsKey("results")) {
