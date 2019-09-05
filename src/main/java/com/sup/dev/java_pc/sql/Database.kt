@@ -1,55 +1,53 @@
 package com.sup.dev.java_pc.sql
 
-import java.sql.SQLException
-
 object Database {
 
-    var instance:DatabaseInstance? = null
+    var instance: DatabaseInstance? = null
 
-    @Throws(ClassNotFoundException::class, InstantiationException::class, IllegalAccessException::class, SQLException::class)
-    fun init(login: String, pass: String, base: String, mysql_url: String) {
-        instance = DatabaseInstance(login, pass, base, mysql_url)
+    fun init(login: String, pass: String, base: String, mysql_url: String, statisticCollector: (String, Long) -> Unit) {
+
+        instance = DatabaseInstance(login, pass, base, mysql_url, statisticCollector)
     }
 
     //
     //  Insert
     //
 
-    fun insert(query: SqlQueryInsert): Long {
-        return instance!!.insert(query, query.requestValues.toTypedArray())
+    fun insert(tag:String, query: SqlQueryInsert): Long {
+        return instance!!.insert(tag, query, query.requestValues.toTypedArray())
     }
 
-    fun insert(tableName: String, vararg o: Any?): Long {
-        return instance!!.insert(tableName, *o)
+    fun insert(tag:String, tableName: String, vararg o: Any?): Long {
+        return instance!!.insert(tag, tableName, *o)
     }
 
     //
     //  Select
     //
 
-    fun select(query: SqlQuerySelect): ResultRows {
-        return instance!!.select(query, query.requestValues.toTypedArray())
+    fun select(tag:String, query: SqlQuerySelect): ResultRows {
+        return instance!!.select(tag, query, query.requestValues.toTypedArray())
 
     }
 
-    fun select(columnsCount: Int, query: String, vararg values: Any?): ResultRows {
-        return instance!!.select(columnsCount, query, *values)
+    fun select(tag:String, columnsCount: Int, query: String, vararg values: Any?): ResultRows {
+        return instance!!.select(tag, columnsCount, query, *values)
     }
 
     //
     //  Update
     //
 
-    fun update(query: SqlQueryUpdate): Int {
-        return instance!!.update(query, query.requestValues.toTypedArray())
+    fun update(tag:String, query: SqlQueryUpdate): Int {
+        return instance!!.update(tag, query, query.requestValues.toTypedArray())
     }
 
     //
     //  Delete
     //
 
-    fun remove(query: SqlQueryRemove) {
-        return instance!!.remove(query, query.requestValues.toTypedArray())
+    fun remove(tag:String, query: SqlQueryRemove) {
+        return instance!!.remove(tag, query, query.requestValues.toTypedArray())
     }
 
 
@@ -57,7 +55,7 @@ object Database {
     //  Execute
     //
 
-    fun execute(query: String?, vararg values: Any?) {
-        return instance!!.execute(query, *values)
+    fun execute(tag:String, query: String?, vararg values: Any?) {
+        return instance!!.execute(tag, query, *values)
     }
 }

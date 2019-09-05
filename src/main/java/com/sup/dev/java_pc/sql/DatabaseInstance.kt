@@ -8,37 +8,43 @@ import java.sql.DriverManager
 import java.sql.SQLException
 
 
-class DatabaseInstance {
+class DatabaseInstance(
+        login: String,
+        pass: String,
+        base: String,
+        mysql_url: String,
+        val statisticCollector: (String, Long) -> Unit
+) {
 
     var SALIENT = false
-
     var connection: Connection? = null
 
-    @Throws(ClassNotFoundException::class, InstantiationException::class, IllegalAccessException::class, SQLException::class)
-    constructor(login: String, pass: String, base: String, mysql_url: String) {
+    init {
         Class.forName("com.mysql.jdbc.Driver").newInstance()
         connection = DriverManager.getConnection("jdbc:mysql://$mysql_url/$base", login, pass)
-        execute("SET GLOBAL connect_timeout=1000000")
-        execute("SET GLOBAL wait_timeout=1000000")
-        execute("SET GLOBAL interactive_timeout=1000000")
-        execute("SET NAMES utf8mb4")
-        execute("SET CHARACTER SET utf8mb4")
-        execute("SET character_set_connection=utf8mb4")
+        execute("DatabaseInstance Init", "SET GLOBAL connect_timeout=1000000")
+        execute("DatabaseInstance Init", "SET GLOBAL wait_timeout=1000000")
+        execute("DatabaseInstance Init", "SET GLOBAL interactive_timeout=1000000")
+        execute("DatabaseInstance Init", "SET NAMES utf8mb4")
+        execute("DatabaseInstance Init", "SET CHARACTER SET utf8mb4")
+        execute("DatabaseInstance Init", "SET character_set_connection=utf8mb4")
     }
 
     //
     //  Insert
     //
 
-    fun insert(query: SqlQueryInsert, vararg values: Any?):Long {
+    fun insert(tag: String, query: SqlQueryInsert, vararg values: Any?): Long {
         try {
+            val t = System.currentTimeMillis()
             val preparedQuery = PreparedQuery(query.getQuery()!!, this, true)
             preparedQuery.setParams(*values)
             preparedQuery.statement.executeUpdate()
             val generatedKeys = preparedQuery.statement.generatedKeys
             generatedKeys.next()
-            val id = if(generatedKeys.isFirst && generatedKeys.isLast) generatedKeys.getLong(1) else 0
+            val id = if (generatedKeys.isFirst && generatedKeys.isLast) generatedKeys.getLong(1) else 0
             preparedQuery.closeIfNeed()
+            statisticCollector.invoke(tag, System.currentTimeMillis() - t)
             return id
         } catch (e: SQLException) {
             if (!SALIENT) {
@@ -47,10 +53,9 @@ class DatabaseInstance {
             }
             throw RuntimeException(e)
         }
-
     }
 
-    fun insert(tableName: String, vararg o: Any?):Long {
+    fun insert(tag: String, tableName: String, vararg o: Any?): Long {
         val columns = ArrayList<String>()
         val values = ArrayList<Any?>()
 
@@ -59,11 +64,10 @@ class DatabaseInstance {
             else columns.add(o[i] as String)
         }
 
-
         val insert = SqlQueryInsert(tableName)
         for (i in columns) insert.put(i, "?")
 
-        return insert(insert, *values.toTypedArray())
+        return insert(tag, insert, *values.toTypedArray())
     }
 
     //
@@ -71,11 +75,11 @@ class DatabaseInstance {
     //
 
 
-    fun select(query: SqlQuerySelect, vararg values: Any?): ResultRows {
+    fun select(tag: String, query: SqlQuerySelect, vararg values: Any?): ResultRows {
         try {
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
-            return select(preparedQuery, query.getColumnsCount())
+            return select(tag, preparedQuery, query.getColumnsCount())
         } catch (e: SQLException) {
             if (!SALIENT) {
                 info(query.getQuery())
@@ -86,12 +90,12 @@ class DatabaseInstance {
 
     }
 
-    fun select(columnsCount: Int, query: String, vararg values: Any?): ResultRows {
+    fun select(tag: String, columnsCount: Int, query: String, vararg values: Any?): ResultRows {
 
         try {
             val preparedQuery = PreparedQuery(query, this)
             preparedQuery.setParams(*values)
-            return select(preparedQuery, columnsCount)
+            return select(tag, preparedQuery, columnsCount)
         } catch (e: SQLException) {
             if (!SALIENT) {
                 info(query)
@@ -102,8 +106,9 @@ class DatabaseInstance {
 
     }
 
-    private fun select(query: PreparedQuery, columnsCount: Int): ResultRows {
+    private fun select(tag: String, query: PreparedQuery, columnsCount: Int): ResultRows {
         try {
+            val t = System.currentTimeMillis()
             val rs = query.statement.executeQuery()
             val list = AnyArray()
             while (rs.next()) {
@@ -116,6 +121,7 @@ class DatabaseInstance {
                 }
             }
             query.closeIfNeed()
+            statisticCollector.invoke(tag, System.currentTimeMillis() - t)
             return ResultRows(list.size() / columnsCount, list)
         } catch (e: SQLException) {
             if (!SALIENT) {
@@ -132,12 +138,14 @@ class DatabaseInstance {
     //  Update
     //
 
-    fun update(query: SqlQueryUpdate, vararg values: Any): Int {
+    fun update(tag: String, query: SqlQueryUpdate, vararg values: Any): Int {
         try {
+            val t = System.currentTimeMillis()
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
             val count = preparedQuery.statement.executeUpdate()
             preparedQuery.closeIfNeed()
+            statisticCollector.invoke(tag, System.currentTimeMillis() - t)
             return count
         } catch (e: SQLException) {
             if (!SALIENT) {
@@ -153,12 +161,14 @@ class DatabaseInstance {
     //  Delete
     //
 
-    fun remove(query: SqlQueryRemove, vararg values: Any) {
+    fun remove(tag: String, query: SqlQueryRemove, vararg values: Any) {
         try {
+            val t = System.currentTimeMillis()
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
             preparedQuery.statement.execute()
             preparedQuery.closeIfNeed()
+            statisticCollector.invoke(tag, System.currentTimeMillis() - t)
         } catch (e: SQLException) {
             if (!SALIENT) {
                 info(query.getQuery())
@@ -174,12 +184,14 @@ class DatabaseInstance {
     //  Execute
     //
 
-    fun execute(query: String?, vararg values: Any?) {
+    fun execute(tag: String, query: String?, vararg values: Any?) {
         try {
+            val t = System.currentTimeMillis()
             val preparedQuery = PreparedQuery(query!!, this)
             preparedQuery.setParams(*values)
             preparedQuery.statement.executeUpdate()
             preparedQuery.closeIfNeed()
+            statisticCollector.invoke(tag, System.currentTimeMillis() - t)
         } catch (e: SQLException) {
             if (!SALIENT) {
                 info(query)
