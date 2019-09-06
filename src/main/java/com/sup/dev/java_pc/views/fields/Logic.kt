@@ -91,17 +91,17 @@ class Logic(private val textComponent: JTextComponent, private val w: Int, hint:
         (textComponent.document as AbstractDocument).documentFilter = object : DocumentFilter() {
             @Throws(BadLocationException::class)
             override fun replace(fb: DocumentFilter.FilterBypass, offset: Int, length: Int, text: String, attrs: AttributeSet) {
-                var text = text
+                var textМ = text
 
-                text = text.replace("\n".toRegex(), "").replace("\r".toRegex(), "")
-                var s = text
+                textМ = textМ.replace("\n".toRegex(), "").replace("\r".toRegex(), "")
+                var s = textМ
 
                 if (offset == fb.document.length)
                     s = fb.document.getText(0, offset) + s
                 else
                     s = fb.document.getText(0, offset) + s + fb.document.getText(offset, fb.document.length - offset)
                 if ((filter == null || filter!!.invoke(s)) && (!onlyNum || ToolsText.isInteger(s)) && (!onlyNumDouble || ToolsText.isDouble(s)))
-                    super.replace(fb, offset, length, text, attrs)
+                    super.replace(fb, offset, length, textМ, attrs)
             }
         }
 

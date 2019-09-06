@@ -43,6 +43,7 @@ abstract class ZTableCell{
 
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <K> getValue(): K? {
         return if (row!!.type > type) {
             row!!.table.getParentRow(row!!)!!.getCell<ZTableCell>(index).getValue()

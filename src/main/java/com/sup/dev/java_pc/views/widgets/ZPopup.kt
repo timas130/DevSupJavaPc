@@ -16,7 +16,7 @@ class ZPopup @JvmOverloads constructor(label: String? = null) : JPopupMenu(label
         get() {
             if (popupScrollBar == null) {
                 popupScrollBar = JScrollBar(JScrollBar.VERTICAL)
-                popupScrollBar!!.addAdjustmentListener { e ->
+                popupScrollBar!!.addAdjustmentListener {
                     doLayout()
                     repaint()
                 }
@@ -59,11 +59,11 @@ class ZPopup @JvmOverloads constructor(label: String? = null) : JPopupMenu(label
     }
 
     override fun remove(index: Int) {
-        var index = index
+        var indexV = index
         // can't remove the scrollbar
-        ++index
+        ++indexV
 
-        super.remove(index)
+        super.remove(indexV)
 
         if (maximumVisibleRows >= componentCount - 1) {
             scrollBar.isVisible = false

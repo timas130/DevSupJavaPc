@@ -44,7 +44,7 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
     }
 
     override fun setErrorIfEmpty() {
-        setOnChangedErrorChecker { source -> getSelected() == null && canShowError }
+        setOnChangedErrorChecker { getSelected() == null && canShowError }
     }
 
 
@@ -101,7 +101,7 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
         selected.clear()
 
         for (v in values)
-            if (v.a1!!.toLowerCase().startsWith(text.toLowerCase()))
+            if (v.a1.toLowerCase().startsWith(text.toLowerCase()))
                 selected.add(v)
 
         val added = selected.size
@@ -114,8 +114,8 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
             })
 
         for (v in values)
-            if (v.a1!!.toLowerCase().contains(text.toLowerCase())
-                    && v.a1!!.length >= text.length
+            if (v.a1.toLowerCase().contains(text.toLowerCase())
+                    && v.a1.length >= text.length
                     && !selected.contains(v))
                 selected.add(v)
 

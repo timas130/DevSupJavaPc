@@ -11,6 +11,7 @@ import java.awt.Component
 import java.util.ArrayList
 
 
+@Suppress("UNCHECKED_CAST")
 class ZTableRow(val table: ZTable, var type: Int) {
     private val panel = ZPanel(ZPanel.Orientation.HORIZONTAL)
     val cells = ArrayList<ZTableCell>()

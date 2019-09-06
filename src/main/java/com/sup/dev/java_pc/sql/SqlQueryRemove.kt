@@ -12,8 +12,8 @@ class SqlQueryRemove(private val table: String) : SqlQueryWithWhere() {
         return super.where(where) as SqlQueryRemove
     }
 
-    override fun where(columns: Any, condition: String, value: Any, link: String): SqlQueryRemove {
-        return super.where(columns, condition, value, link) as SqlQueryRemove
+    override fun where(columns: Any, condition: String, values: Any, link: String): SqlQueryRemove {
+        return super.where(columns, condition, values, link) as SqlQueryRemove
     }
 
     fun whereValue(columns: Any, condition: String, value: Any): SqlQueryRemove {

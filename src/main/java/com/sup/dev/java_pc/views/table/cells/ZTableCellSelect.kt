@@ -49,7 +49,7 @@ class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: St
     }
 
     fun setOnSelect(onSelect: () -> Unit) {
-        setOnSelect { source -> onSelect.invoke() }
+        setOnSelect { _ -> onSelect.invoke() }
     }
 
     fun setOnSelect(onSelect: (Any?) -> Unit) {
@@ -61,7 +61,7 @@ class ZTableCellSelect @JvmOverloads constructor(type: Int, size: Int, label: St
     }
 
     override fun setShowChanges() {
-        field.addOnChanged { source -> field.setBackground(if (isChanged()) GUI.LIGHT_GREEN_100 else GUI.WHITE) }
+        field.addOnChanged { field.setBackground(if (isChanged()) GUI.LIGHT_GREEN_100 else GUI.WHITE) }
     }
 
     override fun setOnRightClick(onRightClick: () -> Unit) {

@@ -33,7 +33,7 @@ abstract class ZTableCellField protected constructor(type: Int, size: Int, label
     }
 
     override fun setShowChanges() {
-        field.addOnChanged { source -> field.setBackground(if (isChanged()) GUI.LIGHT_GREEN_100 else GUI.WHITE) }
+        field.addOnChanged { field.background = if (isChanged()) GUI.LIGHT_GREEN_100 else GUI.WHITE }
     }
 
     //
@@ -46,7 +46,7 @@ abstract class ZTableCellField protected constructor(type: Int, size: Int, label
     }
 
     override fun setValue(value: Any) {
-        field.text = value?.toString() ?: ""
+        field.text = value.toString()
     }
 
     override fun setOnRightClick(onRightClick: ()-> Unit) {

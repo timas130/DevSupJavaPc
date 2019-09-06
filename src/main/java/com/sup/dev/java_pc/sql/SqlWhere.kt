@@ -73,6 +73,7 @@ class SqlWhere {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     class WhereIN(private val column: String, link: String, private val not: Boolean, var values: Array<out Any?>) : Where(link) {
 
         constructor(column: String, values: ArrayList<out Any?>) : this(column, "AND", false, emptyArray()){

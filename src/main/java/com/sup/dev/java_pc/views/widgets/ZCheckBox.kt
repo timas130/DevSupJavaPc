@@ -29,7 +29,7 @@ class ZCheckBox(w: Int, text: String) : ZButton() {
         preferredSize = Dimension(w, getFontMetrics(font).height + 16)
         margin = Insets(0, 0, 0, 0)
 
-        addActionListener { v -> onClick() }
+        addActionListener { onClick() }
     }
 
     private fun onClick() {

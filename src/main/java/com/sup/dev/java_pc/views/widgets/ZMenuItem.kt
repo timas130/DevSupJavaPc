@@ -13,7 +13,7 @@ class ZMenuItem(text: String?, callback: (String?)->Unit) : JMenuItem() {
         font = GUI.BODY_2
         setText(text)
 
-        addActionListener { e -> callback.invoke(text) }
+        addActionListener { callback.invoke(text) }
 
     }
 

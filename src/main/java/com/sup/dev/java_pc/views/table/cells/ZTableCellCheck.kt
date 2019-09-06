@@ -57,7 +57,7 @@ class ZTableCellCheck(type: Int, size: Int, label: String) : ZTableCell(type, si
     //
 
     override fun isEmpty(): Boolean {
-        return checkBox.isChecked === getOriginalValue() as Boolean?
+        return checkBox.isChecked == getOriginalValue() as Boolean?
     }
 
     override fun getCellValue(): Any? {

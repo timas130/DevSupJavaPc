@@ -12,8 +12,8 @@ class SqlQueryUpdate(
         return super.where(where) as SqlQueryUpdate
     }
 
-    override fun where(columns: Any, condition: String, value: Any, link: String): SqlQueryUpdate {
-        return super.where(columns, condition, value, link) as SqlQueryUpdate
+    override fun where(columns: Any, condition: String, values: Any, link: String): SqlQueryUpdate {
+        return super.where(columns, condition, values, link) as SqlQueryUpdate
     }
 
     fun whereValue(columns: Any, condition: String, value: Any): SqlQueryUpdate {
