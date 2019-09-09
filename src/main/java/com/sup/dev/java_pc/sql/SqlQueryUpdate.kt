@@ -34,8 +34,8 @@ class SqlQueryUpdate(
         return this
     }
 
-    fun update(column: String, values: Any): SqlQueryUpdate {
-        columns.add(UpdateColumnSimple(column, values))
+    fun update(column: String, value: Any): SqlQueryUpdate {
+        columns.add(UpdateColumnSimple(column, value))
         return this
     }
 

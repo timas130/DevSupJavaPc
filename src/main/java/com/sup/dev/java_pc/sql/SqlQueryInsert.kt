@@ -6,9 +6,23 @@ class SqlQueryInsert(private val table: String) : SqlQuery() {
     private val columns = ArrayList<String>()
     private val values = ArrayList<String>()
 
+    constructor(table: String, vararg columns: String) : this(table){
+        columns(*columns)
+    }
+
     fun put(column: String, value: Any): SqlQueryInsert {
         columns.add(column)
         values.add(value.toString())
+        return this
+    }
+
+    fun columns(vararg column: String): SqlQueryInsert {
+        for(i in column) columns.add(i)
+        return this
+    }
+
+    fun put(vararg value: Any): SqlQueryInsert {
+        for(i in value) values.add(i.toString())
         return this
     }
 
@@ -22,16 +36,18 @@ class SqlQueryInsert(private val table: String) : SqlQuery() {
 
     override fun createQuery(): String {
         var sql = Sql.INSERT + table + "("
-        var valuesString = Sql.VALUES + "("
         for (i in columns.indices) {
+            if (i != 0) sql += ","
+            sql += columns[i]
+        }
+        sql += ") " + Sql.VALUES +"("
+        for (i in values.indices) {
             if (i != 0) {
                 sql += ","
-                valuesString += ","
             }
-            sql += columns[i]
-            valuesString += values[i]
+            sql += values[i]
         }
-        sql += ") $valuesString)"
+        sql += ")"
         return sql
     }
 
