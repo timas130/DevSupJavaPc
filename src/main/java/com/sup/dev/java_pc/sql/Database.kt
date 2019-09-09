@@ -33,13 +33,15 @@ object Database {
     }
 
     private fun getDatabaseInLoop(): Item2<DatabaseInstance, Boolean>? {
+        var item:Item2<DatabaseInstance, Boolean>? = null
         synchronized(pool) {
             for (i in pool) if (!i.a2) {
                 i.a2 = true
-                return i
+                item = i
+                break
             }
         }
-        return null
+        return item
     }
 
     //
@@ -53,7 +55,8 @@ object Database {
             val t = System.currentTimeMillis()
             v = database.a1.insert(query, query.requestValues.toTypedArray())
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
@@ -68,7 +71,8 @@ object Database {
             val t = System.currentTimeMillis()
             v = database.a1.insert(tableName, *o)
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
@@ -87,7 +91,8 @@ object Database {
             val t = System.currentTimeMillis()
             v = database.a1.select(query, query.requestValues.toTypedArray())
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
@@ -103,7 +108,8 @@ object Database {
             val t = System.currentTimeMillis()
             v = database.a1.select(columnsCount, query, *values)
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
@@ -122,7 +128,8 @@ object Database {
             val t = System.currentTimeMillis()
             v = database.a1.update(query, query.requestValues.toTypedArray())
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
@@ -140,7 +147,8 @@ object Database {
             val t = System.currentTimeMillis()
             database.a1.remove(query, query.requestValues.toTypedArray())
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
@@ -157,7 +165,8 @@ object Database {
             val t = System.currentTimeMillis()
             database.a1.execute(query, *values)
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            database.a2 = false
             throw e
         } finally {
             database.a2 = false
