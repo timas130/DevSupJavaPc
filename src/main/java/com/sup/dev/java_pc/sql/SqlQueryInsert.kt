@@ -26,6 +26,11 @@ class SqlQueryInsert(private val table: String) : SqlQuery() {
         return this
     }
 
+    fun putValues(vararg value: Any): SqlQueryInsert {
+        for(i in value) put("?").value(value)
+        return this
+    }
+
     fun putValue(column: String, value: Any): SqlQueryInsert {
         return put(column, "?").value(value)
     }
