@@ -27,7 +27,7 @@ class SqlQueryInsert(private val table: String) : SqlQuery() {
     }
 
     fun putValues(vararg value: Any): SqlQueryInsert {
-        for(i in value) put("?").value(value)
+        for(i in value) put("?").value(i)
         return this
     }
 
@@ -46,12 +46,16 @@ class SqlQueryInsert(private val table: String) : SqlQuery() {
             sql += columns[i]
         }
         sql += ") " + Sql.VALUES +"("
-        for (i in values.indices) {
-            if (i != 0) {
-                sql += ","
+
+        var xx = 0
+        while (xx < values.size){
+            if(xx != 0) sql += "),("
+            for (i in columns.indices) {
+                if (i != 0) sql += ","
+                sql += values[xx++]
             }
-            sql += values[i]
         }
+
         sql += ")"
         return sql
     }
