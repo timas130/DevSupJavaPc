@@ -11,7 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-
 object GoogleNotification {
 
     private val threadPool: ThreadPoolExecutor = ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
@@ -76,8 +75,9 @@ object GoogleNotification {
                     val jsons = json.getJsonArray("results")!!
                     for (i in 0 until jsons.size()) {
                         val j = jsons.getJson(i)
-                        if(j.containsKey("error") && j.getString("error", "") == "NotRegistered")
+                        if(j.containsKey("error") && j.getString("error", "") == "NotRegistered") {
                             onTokenNotFound!!.invoke(tokens[i])
+                        }
                     }
                 }
             } else {
