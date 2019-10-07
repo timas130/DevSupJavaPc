@@ -24,7 +24,7 @@ object GoogleNotification {
 
     fun send(message: String, tokens: Array<String>) {
         threadPool.execute {
-            val max = 25
+            val max = 500
             var position = 0
             while (position < tokens.size){
                 val end = position + max
