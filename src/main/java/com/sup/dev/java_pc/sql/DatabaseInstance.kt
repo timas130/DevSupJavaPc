@@ -1,11 +1,13 @@
 package com.sup.dev.java_pc.sql
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException
 import com.sup.dev.java.classes.collections.AnyArray
 import com.sup.dev.java.libs.debug.info
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import kotlin.math.sqrt
 
 
 class DatabaseInstance(
@@ -33,25 +35,6 @@ class DatabaseInstance(
     //  Insert
     //
 
-    fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
-        try {
-            val preparedQuery = PreparedQuery(query.getQuery()!!, this, true)
-            preparedQuery.setParams(*values)
-            preparedQuery.statement.executeUpdate()
-            val generatedKeys = preparedQuery.statement.generatedKeys
-            generatedKeys.next()
-            val id = if (generatedKeys.isFirst && generatedKeys.isLast) generatedKeys.getLong(1) else 0
-            preparedQuery.closeIfNeed()
-            return id
-        } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query)
-                info(*values)
-            }
-            throw RuntimeException(e)
-        }
-    }
-
     fun insert(tableName: String, vararg o: Any?): Long {
         val columns = ArrayList<String>()
         val values = ArrayList<Any?>()
@@ -67,6 +50,33 @@ class DatabaseInstance(
         return insert(insert, *values.toTypedArray())
     }
 
+    fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
+        return insert(query, 3, *values)
+    }
+
+    fun insert(query: SqlQueryInsert, tryCount: Int, vararg values: Any?): Long {
+        try {
+            val preparedQuery = PreparedQuery(query.getQuery()!!, this, true)
+            preparedQuery.setParams(*values)
+            preparedQuery.statement.executeUpdate()
+            val generatedKeys = preparedQuery.statement.generatedKeys
+            generatedKeys.next()
+            val id = if (generatedKeys.isFirst && generatedKeys.isLast) generatedKeys.getLong(1) else 0
+            preparedQuery.closeIfNeed()
+            return id
+        } catch (e: SQLException) {
+            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+                return insert(query, tryCount - 1, *values)
+            } else {
+                if (!SALIENT) {
+                    info(query)
+                    info(*values)
+                }
+                throw RuntimeException(e)
+            }
+        }
+    }
+
     //
     //  Select
     //
@@ -78,11 +88,11 @@ class DatabaseInstance(
             preparedQuery.setParams(*values)
             return select(preparedQuery, query.getColumnsCount())
         } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query.getQuery())
-                info(values)
-            }
-            throw RuntimeException(e)
+                if (!SALIENT) {
+                    info(query.getQuery())
+                    info(values)
+                }
+                throw RuntimeException(e)
         }
 
     }
@@ -104,6 +114,10 @@ class DatabaseInstance(
     }
 
     private fun select(query: PreparedQuery, columnsCount: Int): ResultRows {
+        return select(query, 3, columnsCount)
+    }
+
+    private fun select(query: PreparedQuery, tryCount: Int, columnsCount: Int): ResultRows {
         try {
             val rs = query.statement.executeQuery()
             val list = AnyArray()
@@ -119,12 +133,16 @@ class DatabaseInstance(
             query.closeIfNeed()
             return ResultRows(list.size() / columnsCount, list)
         } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query.query)
-                if (query.values == null) info("null")
-                else info(query.values)
+            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+                return select(query, tryCount - 1, columnsCount)
+            } else {
+                if (!SALIENT) {
+                    info(query.query)
+                    if (query.values == null) info("null")
+                    else info(query.values)
+                }
+                throw RuntimeException(e)
             }
-            throw RuntimeException(e)
         }
 
     }
@@ -134,6 +152,10 @@ class DatabaseInstance(
     //
 
     fun update(query: SqlQueryUpdate, vararg values: Any): Int {
+        return update(query, 3, *values)
+    }
+
+    fun update(query: SqlQueryUpdate, tryCount: Int, vararg values: Any): Int {
         try {
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
@@ -141,11 +163,15 @@ class DatabaseInstance(
             preparedQuery.closeIfNeed()
             return count
         } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query.getQuery())
-                info(*values)
+            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+                return update(query, tryCount - 1, *values)
+            } else {
+                if (!SALIENT) {
+                    info(query.getQuery())
+                    info(*values)
+                }
+                throw RuntimeException(e)
             }
-            throw RuntimeException(e)
         }
 
     }
@@ -155,17 +181,25 @@ class DatabaseInstance(
     //
 
     fun remove(query: SqlQueryRemove, vararg values: Any) {
+        remove(query, 3, *values)
+    }
+
+    fun remove(query: SqlQueryRemove, tryCount: Int, vararg values: Any) {
         try {
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
             preparedQuery.statement.execute()
             preparedQuery.closeIfNeed()
         } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query.getQuery())
-                info(*values)
+            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+                remove(query, tryCount - 1, *values)
+            } else {
+                if (!SALIENT) {
+                    info(query.getQuery())
+                    info(*values)
+                }
+                throw RuntimeException(e)
             }
-            throw RuntimeException(e)
         }
 
     }
@@ -176,17 +210,25 @@ class DatabaseInstance(
     //
 
     fun execute(query: String?, vararg values: Any?) {
+        execute(query, 3, values)
+    }
+
+    fun execute(query: String?, tryCount: Int, vararg values: Any?) {
         try {
             val preparedQuery = PreparedQuery(query!!, this)
             preparedQuery.setParams(*values)
             preparedQuery.statement.executeUpdate()
             preparedQuery.closeIfNeed()
         } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query)
-                info(*values)
+            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+                execute(query, tryCount - 1, *values)
+            } else {
+                if (!SALIENT) {
+                    info(query)
+                    info(*values)
+                }
+                throw RuntimeException(e)
             }
-            throw RuntimeException(e)
         }
 
     }
