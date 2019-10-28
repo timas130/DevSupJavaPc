@@ -64,15 +64,15 @@ class DatabaseInstance(
             val id = if (generatedKeys.isFirst && generatedKeys.isLast) generatedKeys.getLong(1) else 0
             preparedQuery.closeIfNeed()
             return id
-        } catch (e: SQLException) {
-            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+        } catch (e: Exception) {
+            if (tryCount > 0) {
                 return insert(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
                     info(query)
                     info(*values)
                 }
-                throw RuntimeException(e)
+                throw e
             }
         }
     }
@@ -88,11 +88,11 @@ class DatabaseInstance(
             preparedQuery.setParams(*values)
             return select(preparedQuery, query.getColumnsCount())
         } catch (e: SQLException) {
-                if (!SALIENT) {
-                    info(query.getQuery())
-                    info(values)
-                }
-                throw RuntimeException(e)
+            if (!SALIENT) {
+                info(query.getQuery())
+                info(values)
+            }
+            throw e
         }
 
     }
@@ -108,7 +108,7 @@ class DatabaseInstance(
                 info(query)
                 info(values)
             }
-            throw RuntimeException(e)
+            throw e
         }
 
     }
@@ -132,8 +132,8 @@ class DatabaseInstance(
             }
             query.closeIfNeed()
             return ResultRows(list.size() / columnsCount, list)
-        } catch (e: SQLException) {
-            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+        } catch (e: Exception) {
+            if (tryCount > 0) {
                 return select(query, tryCount - 1, columnsCount)
             } else {
                 if (!SALIENT) {
@@ -141,7 +141,7 @@ class DatabaseInstance(
                     if (query.values == null) info("null")
                     else info(query.values)
                 }
-                throw RuntimeException(e)
+                throw e
             }
         }
 
@@ -162,15 +162,15 @@ class DatabaseInstance(
             val count = preparedQuery.statement.executeUpdate()
             preparedQuery.closeIfNeed()
             return count
-        } catch (e: SQLException) {
-            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+        } catch (e: Exception) {
+            if (tryCount > 0) {
                 return update(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
                     info(query.getQuery())
                     info(*values)
                 }
-                throw RuntimeException(e)
+                throw e
             }
         }
 
@@ -190,15 +190,15 @@ class DatabaseInstance(
             preparedQuery.setParams(*values)
             preparedQuery.statement.execute()
             preparedQuery.closeIfNeed()
-        } catch (e: SQLException) {
-            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+        } catch (e: Exception) {
+            if (tryCount > 0) {
                 remove(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
                     info(query.getQuery())
                     info(*values)
                 }
-                throw RuntimeException(e)
+                throw e
             }
         }
 
@@ -219,15 +219,15 @@ class DatabaseInstance(
             preparedQuery.setParams(*values)
             preparedQuery.statement.executeUpdate()
             preparedQuery.closeIfNeed()
-        } catch (e: SQLException) {
-            if (e is MySQLTransactionRollbackException && tryCount > 0) {
+        } catch (e: Exception) {
+            if (tryCount > 0) {
                 execute(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
                     info(query)
                     info(*values)
                 }
-                throw RuntimeException(e)
+                throw e
             }
         }
 
