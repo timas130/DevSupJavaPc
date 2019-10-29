@@ -2,6 +2,7 @@ package com.sup.dev.java_pc.google
 
 import com.sup.dev.java.classes.collections.Cash
 import com.sup.dev.java.libs.debug.err
+import com.sup.dev.java.libs.http_api.HttpRequest
 import com.sup.dev.java.libs.json.Json
 import java.io.BufferedReader
 import java.io.IOException
@@ -9,48 +10,67 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 
-
 object GoogleAuth {
 
-    private var apiKey: String? = null
-    private var cash: Cash<String, String>? = null
+    private var serverClientId = ""
+    private var serverClientSecret = ""
+    private var cash: Cash<String, String> = Cash(10000)
 
-    fun init(apiKey: String) {
-        GoogleAuth.apiKey = apiKey
-        cash = Cash(10000)
+    fun init(serverClientId: String, serverClientSecret: String) {
+        GoogleAuth.serverClientId = serverClientId
+        GoogleAuth.serverClientSecret = serverClientSecret
     }
 
     fun getGoogleId(token: String): String? {
 
-        var googleId = cash!![token]
+        var googleId = cash[token]
         if (googleId != null) return googleId
 
-        val json = requestTokenInfo(token)
-        if (json == null ||
-                !verify(json) ||
-                !json.containsKey("sub")
-        ) return null
+        googleId = if (token.startsWith("4/")) requestByIdServerAuthCode(token)
+        else requestByIdToken(token)
 
-        googleId = json.getString("sub")
-        cash!!.put(token, googleId)
+        cash.put(token, googleId)
         return googleId
 
 
     }
 
-    private fun verify(tokenJson: Json): Boolean {
-        if (tokenJson.containsKey("azp") && tokenJson.getString("azp") == apiKey) return true
-        return if (tokenJson.containsKey("aud") && tokenJson.getString("aud") == apiKey) true else false
+    private fun requestByIdServerAuthCode(token: String): String? {
+        try {
+            val result = HttpRequest("https://www.googleapis.com/oauth2/v4/token")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .setMethods(HttpRequest.Method.POST)
+                    .setJson(Json()
+                            .put("grant_type", "authorization_code")
+                            .put("client_id", serverClientId)
+                            .put("client_secret", serverClientSecret)
+                            .put("code", token)
+                    )
+                    .makeNow()
+
+            val json = Json(result)
+            val idToken = json.get("id_token", "") ?: ""
+
+            return requestByIdToken(idToken)
+        } catch (e: Exception) {
+            err(e)
+            return null
+        }
+
     }
 
-    private fun requestTokenInfo(token: String): Json? {
+    private fun requestByIdToken(token: String): String? {
         var inp: BufferedReader? = null
         try {
             inp = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
             var s = ""
             while (inp.ready()) s += inp.readLine()
 
-            return Json(s)
+            val json = Json(s)
+            if (!json.containsKey("sub")) return null
+            val googleId = json.getString("sub")
+
+            return googleId
         } catch (e: Exception) {
             err(e)
         } finally {

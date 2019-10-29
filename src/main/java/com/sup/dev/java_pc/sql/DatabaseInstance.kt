@@ -1,14 +1,11 @@
 package com.sup.dev.java_pc.sql
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException
 import com.sup.dev.java.classes.collections.AnyArray
 import com.sup.dev.java.libs.debug.info
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import kotlin.math.sqrt
-
 
 class DatabaseInstance(
         login: String,
@@ -17,6 +14,7 @@ class DatabaseInstance(
         mysql_url: String
 ) {
 
+    var RETRY_COUNT = 5
     var SALIENT = false
     var connection: Connection? = null
 
@@ -51,7 +49,7 @@ class DatabaseInstance(
     }
 
     fun insert(query: SqlQueryInsert, vararg values: Any?): Long {
-        return insert(query, 3, *values)
+        return insert(query, RETRY_COUNT, *values)
     }
 
     fun insert(query: SqlQueryInsert, tryCount: Int, vararg values: Any?): Long {
@@ -81,70 +79,60 @@ class DatabaseInstance(
     //  Select
     //
 
+    fun select(query: SqlQuerySelect, vararg values: Any?) = select(query, RETRY_COUNT, *values)
 
-    fun select(query: SqlQuerySelect, vararg values: Any?): ResultRows {
+    fun select(query: SqlQuerySelect, tryCount:Int, vararg values: Any?): ResultRows {
         try {
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
             return select(preparedQuery, query.getColumnsCount())
-        } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query.getQuery())
-                info(values)
+        } catch (e: Exception) {
+            if (tryCount > 0) {
+                return select(query, tryCount - 1, *values)
+            } else {
+                if (!SALIENT) {
+                    info(query.getQuery())
+                    info(values)
+                }
+                throw e
             }
-            throw e
         }
-
     }
 
-    fun select(columnsCount: Int, query: String, vararg values: Any?): ResultRows {
+    fun select(columnsCount: Int, query: String, vararg values: Any?) = select(columnsCount, query, RETRY_COUNT, *values)
 
+    fun select(columnsCount: Int, query: String, tryCount:Int, vararg values: Any?): ResultRows {
         try {
             val preparedQuery = PreparedQuery(query, this)
             preparedQuery.setParams(*values)
             return select(preparedQuery, columnsCount)
         } catch (e: SQLException) {
-            if (!SALIENT) {
-                info(query)
-                info(values)
+            if (tryCount > 0) {
+                return select(columnsCount, query, tryCount - 1, *values)
+            } else {
+                if (!SALIENT) {
+                    info(query)
+                    info(values)
+                }
             }
             throw e
         }
-
     }
 
     private fun select(query: PreparedQuery, columnsCount: Int): ResultRows {
-        return select(query, 3, columnsCount)
-    }
-
-    private fun select(query: PreparedQuery, tryCount: Int, columnsCount: Int): ResultRows {
-        try {
-            val rs = query.statement.executeQuery()
-            val list = AnyArray()
-            while (rs.next()) {
-                for (i in 1 until columnsCount + 1) {
-                    val ob = rs.getObject(i)
-                    if (ob is BigDecimal)
-                        list.add(ob.toInt())
-                    else
-                        list.add(ob)
-                }
-            }
-            query.closeIfNeed()
-            return ResultRows(list.size() / columnsCount, list)
-        } catch (e: Exception) {
-            if (tryCount > 0) {
-                return select(query, tryCount - 1, columnsCount)
-            } else {
-                if (!SALIENT) {
-                    info(query.query)
-                    if (query.values == null) info("null")
-                    else info(query.values)
-                }
-                throw e
+        val rs = query.statement.executeQuery()
+        val list = AnyArray()
+        while (rs.next()) {
+            for (i in 1 until columnsCount + 1) {
+                val ob = rs.getObject(i)
+                if (ob is BigDecimal)
+                    list.add(ob.toInt())
+                else
+                    list.add(ob)
             }
         }
-
+        query.closeIfNeed()
+        return ResultRows(list.size() / columnsCount, list)
     }
 
     //
@@ -152,7 +140,7 @@ class DatabaseInstance(
     //
 
     fun update(query: SqlQueryUpdate, vararg values: Any): Int {
-        return update(query, 3, *values)
+        return update(query, RETRY_COUNT, *values)
     }
 
     fun update(query: SqlQueryUpdate, tryCount: Int, vararg values: Any): Int {
@@ -181,7 +169,7 @@ class DatabaseInstance(
     //
 
     fun remove(query: SqlQueryRemove, vararg values: Any) {
-        remove(query, 3, *values)
+        remove(query, RETRY_COUNT, *values)
     }
 
     fun remove(query: SqlQueryRemove, tryCount: Int, vararg values: Any) {
@@ -210,7 +198,7 @@ class DatabaseInstance(
     //
 
     fun execute(query: String?, vararg values: Any?) {
-        execute(query, 3, values)
+        execute(query, RETRY_COUNT, values)
     }
 
     fun execute(query: String?, tryCount: Int, vararg values: Any?) {
