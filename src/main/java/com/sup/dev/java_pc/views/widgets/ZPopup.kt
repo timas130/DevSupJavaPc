@@ -76,14 +76,14 @@ class ZPopup @JvmOverloads constructor(label: String? = null) : JPopupMenu(label
             var extent = 0
             var max = 0
             var i = 0
-            var unit = -1
+            var un = -1
             var width = 0
             for (comp in components) {
                 if (comp !is JScrollBar) {
                     val preferredSize = comp.preferredSize
                     width = Math.max(width, preferredSize.width)
-                    if (unit < 0) {
-                        unit = preferredSize.height
+                    if (un < 0) {
+                        un = preferredSize.height
                     }
                     if (i++ < maximumVisibleRows) {
                         extent += preferredSize.height
@@ -95,7 +95,7 @@ class ZPopup @JvmOverloads constructor(label: String? = null) : JPopupMenu(label
             val insets = insets
             val widthMargin = insets.left + insets.right
             val heightMargin = insets.top + insets.bottom
-            scrollBar.unitIncrement = unit
+            scrollBar.unitIncrement = un
             scrollBar.blockIncrement = extent
             scrollBar.setValues(0, heightMargin + extent, 0, heightMargin + max)
 
