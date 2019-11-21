@@ -38,8 +38,13 @@ class ResultRows(val rowsCount: Int, var values: AnyArray) {
     }
 
     fun nextLongOrZero(): Long {
-        return if (hasNext()) nextMayNull()?:0L
-        else 0L
+        if (hasNext()){
+            val next:Any? = nextMayNull()
+            if(next is Number) return next.toLong()
+            return 0L
+        }else{
+            return 0L
+        }
     }
 
     fun sumOrZero(): Long {
