@@ -37,7 +37,8 @@ object GoogleAuth {
 
     private fun requestByIdServerAuthCode(token: String): String? {
         try {
-            val result = HttpRequest("https://www.googleapis.com/oauth2/v4/token")
+            val result = HttpRequest()
+                    .setUrl("https://www.googleapis.com/oauth2/v4/token")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .setMethods(HttpRequest.Method.POST)
                     .setJson(Json()
