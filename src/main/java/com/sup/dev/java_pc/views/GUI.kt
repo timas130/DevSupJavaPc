@@ -186,17 +186,15 @@ object GUI {
     }
 
 
-    private fun createFont(name: String, size: Int): Font? {
-        var telegraficoFont: Font? = null
+    private fun createFont(name: String, size: Int): Font {
         try {
             val myStream = BufferedInputStream(FileInputStream("$FONTS_DIR$name.ttf"))
             val ttfBase = Font.createFont(Font.TRUETYPE_FONT, myStream)
-            telegraficoFont = ttfBase.deriveFont(Font.PLAIN, size.toFloat())
+            return ttfBase.deriveFont(Font.PLAIN, size.toFloat())
         } catch (ex: Exception) {
             ex.printStackTrace()
+            throw ex
         }
-
-        return telegraficoFont
     }
 
 

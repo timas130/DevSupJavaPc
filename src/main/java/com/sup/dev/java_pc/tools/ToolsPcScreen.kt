@@ -5,12 +5,8 @@ import java.awt.Toolkit
 
 object ToolsPcScreen {
 
-
-    val screenWidth: Double
-        get() = Toolkit.getDefaultToolkit().screenSize.getWidth()
-
-    val screenHeight: Double
-        get() = Toolkit.getDefaultToolkit().screenSize.getHeight()
+    fun getScreenWidth() = Toolkit.getDefaultToolkit().screenSize.getWidth().toInt()
+    fun getScreenHeight() =  Toolkit.getDefaultToolkit().screenSize.getHeight().toInt()
 
     val screenDPI: Double
         get() = 240.0
