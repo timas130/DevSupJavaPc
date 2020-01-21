@@ -51,6 +51,7 @@ object GUI {
     val SLEEP_2000 = 2000
 
     val WHITE = Color.WHITE
+    val BLACK = Color.BLACK
     val ALPHA = Color(0x00000000)
 
     val TEAL_50 = Color(0xE0F2F1)
