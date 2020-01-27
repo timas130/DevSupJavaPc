@@ -34,7 +34,7 @@ class ViewScene : JPanel(), VeSceneInterface, MouseListener, MouseMotionListener
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-        VeScene.draw(g)
+        //VeScene.draw(g)
         repaint()
     }
 
