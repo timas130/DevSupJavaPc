@@ -5,13 +5,14 @@ import com.sup.dev.java.libs.visual_engine.root.VeScene
 import com.sup.dev.java.libs.visual_engine.platform.VeSceneInterface
 import java.awt.Graphics
 import java.awt.Graphics2D
-import java.awt.RenderingHints
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import javax.swing.JPanel
 
 class ViewScene : JPanel(), VeSceneInterface, MouseListener, MouseMotionListener {
+
+    private val g = VeGraphicsPc()
 
     init {
         addMouseListener(this)
@@ -23,18 +24,14 @@ class ViewScene : JPanel(), VeSceneInterface, MouseListener, MouseMotionListener
         VeScene.setScreenSize(w.toFloat(), h.toFloat())
     }
 
-    override fun paint(g: Graphics?) {
-        if(g !is Graphics2D) {
+    override fun paint(graphics: Graphics?) {
+        if(graphics !is Graphics2D) {
             repaint()
             return
         }
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-        //VeScene.draw(g)
+        g.setGraphics(graphics)
+        VeScene.draw(g)
         repaint()
     }
 

@@ -2,7 +2,6 @@ package com.sup.dev.java_pc.visual_engine
 
 import com.sup.dev.java.libs.visual_engine.graphics.VeGraphics
 import com.sup.dev.java.libs.visual_engine.root.VeGui
-import com.sup.dev.java.tools.ToolsMath
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -23,6 +22,8 @@ class VeGraphicsPc(
         graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY)
         graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
         graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
+
+        clearOffset()
     }
 
     override fun drawString(string: String, x: Float, y: Float) {
@@ -37,48 +38,28 @@ class VeGraphicsPc(
         graphics!!.drawLine((getOffsetX() + x1).toInt(), (getOffsetY() + y1).toInt(), (getOffsetX() + x2).toInt(), (getOffsetY() + y2).toInt())
     }
 
-    override fun fillRect(x1: Float, y1: Float, x2: Float, y2: Float) {
+    override fun fillRect(x: Float, y: Float, w: Float, h: Float) {
         graphics!!.color = Color(getColor())
         graphics!!.stroke = BasicStroke(getStrokeSize())
-
-        val xx = ToolsMath.min(x1, x2)
-        val yy = ToolsMath.min(y1, y2)
-        val ww = ToolsMath.max(x1, x2) - xx
-        val hh = ToolsMath.max(y1, y2) - yy
-        graphics!!.fillRect((getOffsetX() + xx).toInt(), (getOffsetY() + yy).toInt(), ww.toInt(), hh.toInt())
+        graphics!!.fillRect((getOffsetX() + x).toInt(), (getOffsetY() + y).toInt(), w.toInt(), h.toInt())
     }
 
-    override fun drawRect(x1: Float, y1: Float, x2: Float, y2: Float) {
+    override fun drawRect(x: Float, y: Float, w: Float, h: Float) {
         graphics!!.color = Color(getColor())
         graphics!!.stroke = BasicStroke(getStrokeSize())
-
-        val xx = ToolsMath.min(x1, x2)
-        val yy = ToolsMath.min(y1, y2)
-        val ww = ToolsMath.max(x1, x2) - xx
-        val hh = ToolsMath.max(y1, y2) - yy
-        graphics!!.drawRect((getOffsetX() + xx).toInt(), (getOffsetY() + yy).toInt(), ww.toInt(), hh.toInt())
+        graphics!!.drawRect((getOffsetX() + x).toInt(), (getOffsetY() + y).toInt(), w.toInt(), h.toInt())
     }
 
-    override fun fillCircle(x1: Float, y1: Float, x2: Float, y2: Float) {
+    override fun fillCircle(x: Float, y: Float, w: Float, h: Float) {
         graphics!!.color = Color(getColor())
         graphics!!.stroke = BasicStroke(getStrokeSize())
-
-        val xx = ToolsMath.min(x1, x2)
-        val yy = ToolsMath.min(y1, y2)
-        val ww = ToolsMath.max(x1, x2) - xx
-        val hh = ToolsMath.max(y1, y2) - yy
-        graphics!!.fillArc((getOffsetX() + x1).toInt(), (getOffsetY() +y1).toInt(), (x2).toInt(), (y2).toInt(), 0, 360)
+        graphics!!.fillArc((getOffsetX() + x).toInt(), (getOffsetY() + y).toInt(), (w).toInt(), (h).toInt(), 0, 360)
     }
 
-    override fun drawCircle(x1: Float, y1: Float, x2: Float, y2: Float) {
+    override fun drawCircle(x: Float, y: Float, w: Float, h: Float) {
         graphics!!.color = Color(getColor())
         graphics!!.stroke = BasicStroke(getStrokeSize())
-
-        val xx = ToolsMath.min(x1, x2)
-        val yy = ToolsMath.min(y1, y2)
-        val ww = ToolsMath.max(x1, x2) - xx
-        val hh = ToolsMath.max(y1, y2) - yy
-        graphics!!.drawArc((getOffsetX() + xx).toInt(), (getOffsetY() + yy).toInt(), (ww).toInt(), (hh).toInt(), 0, 360)
+        graphics!!.drawArc((getOffsetX() + x).toInt(), (getOffsetY() + y).toInt(), (w).toInt(), (h).toInt(), 0, 360)
     }
 
     override fun fillCircle(cx: Float, cy: Float, r: Float) {
