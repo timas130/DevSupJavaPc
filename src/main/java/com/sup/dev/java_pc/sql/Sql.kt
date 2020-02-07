@@ -93,4 +93,6 @@ object Sql {
         else
             java.lang.Long.parseLong(o.toString() + "")
     }
+
+    fun mirror(v:String) = v.replace("_", "\\_").replace("%", "\\%")
 }
