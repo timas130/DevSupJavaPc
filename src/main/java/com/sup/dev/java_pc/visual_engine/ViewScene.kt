@@ -52,7 +52,6 @@ class ViewScene : JPanel(), VeSceneInterface, MouseListener, MouseMotionListener
     }
 
     override fun mouseMoved(e: MouseEvent) {
-        VeActions.onMove(e.x.toFloat(), e.y.toFloat())
     }
 
     override fun mouseDragged(e: MouseEvent) {

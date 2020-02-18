@@ -67,7 +67,7 @@ class VeGraphicsPc(
         val yy = ToolsMath.min(y1, y2)
         val ww = ToolsMath.max(x1, x2) - xx
         val hh = ToolsMath.max(y1, y2) - yy
-        graphics!!.fillArc((getOffsetX() + xx).toInt(), (getOffsetY() + yy).toInt(), (ww).toInt(), (hh).toInt(), 0, 360)
+        graphics!!.fillArc((getOffsetX() + x1).toInt(), (getOffsetY() +y1).toInt(), (x2).toInt(), (y2).toInt(), 0, 360)
     }
 
     override fun drawCircle(x1: Float, y1: Float, x2: Float, y2: Float) {
