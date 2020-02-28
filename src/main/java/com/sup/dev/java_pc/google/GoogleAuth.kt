@@ -49,7 +49,7 @@ object GoogleAuth {
                     )
                     .makeNow()
 
-            val json = Json(result)
+            val json = Json(result.text)
             val idToken = json.get("id_token", "") ?: ""
 
             return requestByIdToken(idToken)
