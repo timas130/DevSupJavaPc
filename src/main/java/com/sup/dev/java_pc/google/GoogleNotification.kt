@@ -1,41 +1,53 @@
 package com.sup.dev.java_pc.google
 
+import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonArray
+import com.sup.dev.java.tools.ToolsThreads
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 object GoogleNotification {
 
-    private val threadPool: ThreadPoolExecutor = ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
-
     private var onTokenNotFound: ((String) -> Unit)? = null
     private var apiKey: String? = null
+    private val executePacks = ArrayList<Item2<String, Array<String>>>()
 
     fun init(apiKey: String) {
         GoogleNotification.apiKey = apiKey
-    }
+        ToolsThreads.thread {
+            while (true){
+                if (executePacks.isEmpty()) ToolsThreads.sleep(1000)
+                else {
+                    var item: Item2<String, Array<String>>? = null
+                    synchronized(executePacks) { item = executePacks.removeAt(0) }
 
-    fun send(message: String, tokens: Array<String>) {
-        threadPool.execute {
-            val max = 500
-            var position = 0
-            while (position < tokens.size){
-                val end = position + max
-                sendNow(message, tokens.copyOfRange(position, Math.min(tokens.size, end)))
-                position += max
+                    if (item != null) {
+                        val message = item!!.a1
+                        val tokens = item!!.a2
+                        val max = 500
+                        var position = 0
+                        while (position < tokens.size) {
+                            val end = position + max
+                            sendNow(message, tokens.copyOfRange(position, Math.min(tokens.size, end)))
+                            position += max
+                        }
+                    }
+
+
+                }
             }
-
         }
     }
 
-    fun sendNow(message: String,  tokens: Array<String>) {
+    fun send(message: String, tokens: Array<String>) {
+        synchronized(executePacks) { executePacks.add(Item2(message, tokens)) }
+    }
+
+    fun sendNow(message: String, tokens: Array<String>) {
         try {
 
             val jsonRoot = Json()
@@ -75,7 +87,7 @@ object GoogleNotification {
                     val jsons = json.getJsonArray("results")!!
                     for (i in 0 until jsons.size()) {
                         val j = jsons.getJson(i)
-                        if(j.containsKey("error") && j.getString("error", "") == "NotRegistered") {
+                        if (j.containsKey("error") && j.getString("error", "") == "NotRegistered") {
                             onTokenNotFound!!.invoke(tokens[i])
                         }
                     }
