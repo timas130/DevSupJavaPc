@@ -21,16 +21,11 @@ class PreparedQuery(
     constructor(query: String?, database:DatabaseInstance, isInsert:Boolean) : this(true, query, database, isInsert) {}
 
     init {
-        try {
-            if(!isInsert) {
-                statement = database.connection!!.prepareStatement(query)
-            }else{
-                statement = database.connection!!.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
-            }
-        } catch (e: SQLException) {
-            throw RuntimeException(e)
+        if(!isInsert) {
+            statement = database.connection!!.prepareStatement(query)
+        }else{
+            statement = database.connection!!.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
         }
-
     }
 
     @Throws(SQLException::class)

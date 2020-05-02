@@ -8,25 +8,34 @@ import java.sql.DriverManager
 import java.sql.SQLException
 
 class DatabaseInstance(
-        login: String,
-        pass: String,
-        base: String,
-        mysql_url: String
+        private val login: String,
+        private val pass: String,
+        private val base: String,
+        private val mysql_url: String
 ) {
 
     var RETRY_COUNT = 5
     var SALIENT = false
     var connection: Connection? = null
+    var databaseKey = 0L
 
     init {
-        Class.forName("com.mysql.jdbc.Driver").newInstance()
-        connection = DriverManager.getConnection("jdbc:mysql://$mysql_url/$base", login, pass)
-        execute("SET GLOBAL connect_timeout=1000000")
-        execute("SET GLOBAL wait_timeout=1000000")
-        execute("SET GLOBAL interactive_timeout=1000000")
-        execute("SET NAMES utf8mb4")
-        execute("SET CHARACTER SET utf8mb4")
-        execute("SET character_set_connection=utf8mb4")
+        restart(databaseKey)
+    }
+
+    private fun restart(databaseKey: Long) {
+        synchronized(this) {
+            if (this.databaseKey != databaseKey) return
+            this.databaseKey = System.currentTimeMillis()
+            Class.forName("com.mysql.jdbc.Driver").newInstance()
+            connection = DriverManager.getConnection("jdbc:mysql://$mysql_url/$base", login, pass)
+            execute("SET GLOBAL connect_timeout=1000000")
+            execute("SET GLOBAL wait_timeout=1000000")
+            execute("SET GLOBAL interactive_timeout=1000000")
+            execute("SET NAMES utf8mb4")
+            execute("SET CHARACTER SET utf8mb4")
+            execute("SET character_set_connection=utf8mb4")
+        }
     }
 
     //
@@ -64,6 +73,7 @@ class DatabaseInstance(
             return id
         } catch (e: Exception) {
             if (tryCount > 0) {
+                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 return insert(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -81,13 +91,14 @@ class DatabaseInstance(
 
     fun select(query: SqlQuerySelect, vararg values: Any?) = select(query, RETRY_COUNT, *values)
 
-    fun select(query: SqlQuerySelect, tryCount:Int, vararg values: Any?): ResultRows {
+    fun select(query: SqlQuerySelect, tryCount: Int, vararg values: Any?): ResultRows {
         try {
             val preparedQuery = PreparedQuery(query.getQuery(), this)
             preparedQuery.setParams(*values)
             return select(preparedQuery, query.getColumnsCount())
         } catch (e: Exception) {
             if (tryCount > 0) {
+                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 return select(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -101,13 +112,14 @@ class DatabaseInstance(
 
     fun select(columnsCount: Int, query: String, vararg values: Any?) = select(columnsCount, query, RETRY_COUNT, *values)
 
-    fun select(columnsCount: Int, query: String, tryCount:Int, vararg values: Any?): ResultRows {
+    fun select(columnsCount: Int, query: String, tryCount: Int, vararg values: Any?): ResultRows {
         try {
             val preparedQuery = PreparedQuery(query, this)
             preparedQuery.setParams(*values)
             return select(preparedQuery, columnsCount)
         } catch (e: SQLException) {
             if (tryCount > 0) {
+                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 return select(columnsCount, query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -152,6 +164,7 @@ class DatabaseInstance(
             return count
         } catch (e: Exception) {
             if (tryCount > 0) {
+                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 return update(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -180,6 +193,7 @@ class DatabaseInstance(
             preparedQuery.closeIfNeed()
         } catch (e: Exception) {
             if (tryCount > 0) {
+                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 remove(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -209,6 +223,7 @@ class DatabaseInstance(
             preparedQuery.closeIfNeed()
         } catch (e: Exception) {
             if (tryCount > 0) {
+                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 execute(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
