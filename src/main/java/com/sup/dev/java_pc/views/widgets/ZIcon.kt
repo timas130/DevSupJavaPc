@@ -101,7 +101,7 @@ class ZIcon(iconPath: String) : JComponent(), MouseListener {
 
     companion object {
 
-        private val FOCUS = GUI.COLOR_ACCENT_FOCUS
+        private val FOCUS = GUI.COLOR_SECONDARY_FOCUS
         private val DEFAULT: Color? = null
     }
 

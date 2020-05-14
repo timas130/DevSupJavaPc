@@ -92,8 +92,8 @@ open class ZButton(w: Int, text: String) : JButton(), MouseListener {
 
     companion object {
 
-        val DEFAULT = GUI.COLOR_ACCENT
-        val FOCUS = GUI.COLOR_ACCENT_FOCUS
+        val DEFAULT = GUI.COLOR_SECONDARY
+        val FOCUS = GUI.COLOR_SECONDARY_FOCUS
     }
 
 }

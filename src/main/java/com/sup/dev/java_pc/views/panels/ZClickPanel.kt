@@ -76,7 +76,7 @@ class ZClickPanel : ZPanel(), MouseListener {
 
     companion object {
 
-        val FOCUS = GUI.COLOR_ACCENT_FOCUS
+        val FOCUS = GUI.COLOR_SECONDARY_FOCUS
         val DEFAULT = GUI.WHITE
     }
 
