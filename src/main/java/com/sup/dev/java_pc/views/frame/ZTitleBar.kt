@@ -1,8 +1,8 @@
 package com.sup.dev.java_pc.views.frame
 
 import com.sup.dev.java_pc.views.GUI
-import com.sup.dev.java_pc.views.widgets.ZIcon
-import com.sup.dev.java_pc.views.widgets.ZLabel
+import com.sup.dev.java_pc.views.views.ZIcon
+import com.sup.dev.java_pc.views.views.ZLabel
 import javax.swing.JPanel
 
 

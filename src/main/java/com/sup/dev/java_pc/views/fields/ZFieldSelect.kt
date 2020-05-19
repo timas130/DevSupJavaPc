@@ -3,8 +3,8 @@ package com.sup.dev.java_pc.views.fields
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java_pc.tools.ToolsGui
 import com.sup.dev.java_pc.views.GUI
-import com.sup.dev.java_pc.views.widgets.ZMenuItem
-import com.sup.dev.java_pc.views.widgets.ZPopup
+import com.sup.dev.java_pc.views.views.ZMenuItem
+import com.sup.dev.java_pc.views.views.ZPopup
 import java.awt.Color
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener

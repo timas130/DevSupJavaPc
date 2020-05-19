@@ -2,8 +2,8 @@ package com.sup.dev.java_pc.views.table
 
 import com.sup.dev.java_pc.views.GUI
 import com.sup.dev.java_pc.views.panels.ZPanel
-import com.sup.dev.java_pc.views.widgets.ZLabel
-import com.sup.dev.java_pc.views.widgets.ZSpace
+import com.sup.dev.java_pc.views.views.ZLabel
+import com.sup.dev.java_pc.views.views.ZSpace
 
 
 //  private boolean completed = false;

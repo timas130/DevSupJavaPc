@@ -1,8 +1,8 @@
 package com.sup.dev.java_pc.views.dialogs
 
 import com.sup.dev.java_pc.views.panels.ZPanel
-import com.sup.dev.java_pc.views.widgets.ZButton
-import com.sup.dev.java_pc.views.widgets.ZLabel
+import com.sup.dev.java_pc.views.views.ZButton
+import com.sup.dev.java_pc.views.views.ZLabel
 
 
 class ZConfirmDialog(text: String, yesText: String, noText: String) : ZPanel(ZPanel.Orientation.VERTICAL) {

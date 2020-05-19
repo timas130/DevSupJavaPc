@@ -5,8 +5,8 @@ import com.sup.dev.java_pc.views.GUI
 import com.sup.dev.java_pc.views.dialogs.ZConfirmDialog
 import com.sup.dev.java_pc.views.frame.ZFrame
 import com.sup.dev.java_pc.views.panels.ZPanel
-import com.sup.dev.java_pc.views.widgets.ZIcon
-import com.sup.dev.java_pc.views.widgets.ZSpace
+import com.sup.dev.java_pc.views.views.ZIcon
+import com.sup.dev.java_pc.views.views.ZSpace
 import java.awt.Component
 import java.util.ArrayList
 

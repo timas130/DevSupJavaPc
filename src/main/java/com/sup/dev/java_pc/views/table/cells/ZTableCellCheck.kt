@@ -2,7 +2,7 @@ package com.sup.dev.java_pc.views.table.cells
 
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.views.table.ZTableCell
-import com.sup.dev.java_pc.views.widgets.ZCheckBox
+import com.sup.dev.java_pc.views.views.ZCheckBox
 import java.awt.Component
 
 
