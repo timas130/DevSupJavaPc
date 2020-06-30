@@ -9,7 +9,6 @@ import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
-
 class GoogleMail(private val username: String, private val password: String) {
     private val props: Properties
 
