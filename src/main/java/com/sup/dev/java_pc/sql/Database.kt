@@ -1,6 +1,7 @@
 package com.sup.dev.java_pc.sql
 
 import com.sup.dev.java.classes.items.Item2
+import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.tools.ToolsThreads
 import java.lang.Exception
 import java.lang.RuntimeException
@@ -145,12 +146,17 @@ object Database {
         val database = getDatabase()
         try {
             val t = System.currentTimeMillis()
+            log("z1")
             database.a1.remove(query, query.requestValues.toTypedArray())
+            log("z2")
             statisticCollector.invoke(tag, System.currentTimeMillis() - t)
+            log("z3")
         } catch (e: Throwable) {
+            log("z E")
             database.a2 = false
             throw e
         } finally {
+            log("z F")
             database.a2 = false
         }
     }
