@@ -2,7 +2,6 @@ package com.sup.dev.java_pc.sql
 
 import com.sup.dev.java.classes.collections.AnyArray
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.log
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
@@ -188,17 +187,11 @@ class DatabaseInstance(
 
     fun remove(query: SqlQueryRemove, tryCount: Int, vararg values: Any) {
         try {
-            log("s1")
             val preparedQuery = PreparedQuery(query.getQuery(), this)
-            log("s2")
             preparedQuery.setParams(*values)
-            log("s3")
             preparedQuery.statement.execute()
-            log("s4")
             preparedQuery.closeIfNeed()
-            log("s5")
         } catch (e: Exception) {
-            log("s E " + e)
             if (tryCount > 0) {
                 if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
                 remove(query, tryCount - 1, *values)
