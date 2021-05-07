@@ -2,7 +2,7 @@ package com.sup.dev.java_pc.views.table
 
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.views.GUI
-import com.sup.dev.java_pc.views.dialogs.ZConfirmDialog
+import com.sup.dev.java_pc.views.dialogs.ZConfirmDialg
 import com.sup.dev.java_pc.views.frame.ZFrame
 import com.sup.dev.java_pc.views.panels.ZPanel
 import com.sup.dev.java_pc.views.views.ZIcon
@@ -65,7 +65,7 @@ class ZTableRow(val table: ZTable, var type: Int) {
             return
         }
 
-        val confirmDialog = ZConfirmDialog("Remove row and all subrows?", "Remove", "Cancel")
+        val confirmDialog = ZConfirmDialg("Remove row and all subrows?", "Remove", "Cancel")
         confirmDialog.setOnYes {
             table.removeRow(this)
             ZFrame.instance!!.hideDialog()
