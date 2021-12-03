@@ -11,6 +11,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object GoogleNotification {
+    private val allowedCustomEndpoints = listOf("https://push.33rd.dev/push")
 
     private var onTokenNotFound: ((String) -> Unit)? = null
     private var apiKey: String? = null
@@ -22,7 +23,7 @@ object GoogleNotification {
             while (true){
                 if (executePacks.isEmpty()) ToolsThreads.sleep(1000)
                 else {
-                    var item: Item2<String, Array<String>>? = null
+                    var item: Item2<String, Array<String>>?
                     synchronized(executePacks) { item = executePacks.removeAt(0) }
 
                     if (item != null) {
@@ -49,56 +50,84 @@ object GoogleNotification {
 
     fun sendNow(message: String, tokens: Array<String>) {
         try {
+            val tokenCategories = mutableMapOf<String, MutableList<String>>()
+            for (token in tokens) {
+                if (token.startsWith("custom|")) {
+                    val parts = token.split("|")
+                    if (parts.size != 3) continue
 
-            val jsonRoot = Json()
-                    .put("registration_ids", JsonArray().put(*tokens))
+                    if (allowedCustomEndpoints.contains(parts[1])) {
+                        val category = tokenCategories[parts[1]] ?: kotlin.run {
+                            tokenCategories[parts[1]] = mutableListOf()
+                            tokenCategories[parts[1]]!!
+                        }
+                        category.add(parts[2])
+                    }
+                } else {
+                    (tokenCategories["fcm"] ?: kotlin.run {
+                        tokenCategories["fcm"] = mutableListOf()
+                        tokenCategories["fcm"]!!
+                    }).add(token)
+                }
+            }
+
+            for (category in tokenCategories.entries) {
+                val jsonRoot = Json()
+                    .put("registration_ids", JsonArray().put(category.value))
                     .put("data", Json().put("my_data", message))
                     .put("time_to_live", 30)
 
-            val url = URL("https://fcm.googleapis.com/fcm/send")
-            val conn = url.openConnection() as HttpURLConnection
-            conn.setRequestProperty("Authorization", "key=$apiKey")
-            conn.setRequestProperty("Content-Type", "application/json; UTF-8")
-            conn.requestMethod = "POST"
-            conn.useCaches = false
-            conn.doInput = true
-            conn.doOutput = true
+                try {
+                    val url = URL(if (category.key == "fcm") "https://fcm.googleapis.com/fcm/send" else category.key)
+                    val conn = url.openConnection() as HttpURLConnection
+                    if (category.key == "fcm") // the fcm key is only sent to fcm
+                        conn.setRequestProperty("Authorization", "key=$apiKey")
+                    conn.setRequestProperty("Content-Type", "application/json; UTF-8")
+                    conn.requestMethod = "POST"
+                    conn.useCaches = false
+                    conn.doInput = true
+                    conn.doOutput = true
+                    conn.connectTimeout = 5000
+                    conn.readTimeout = 10000
 
-            val wr = OutputStreamWriter(conn.outputStream)
-            wr.write(jsonRoot.toString())
-            wr.flush()
+                    val wr = OutputStreamWriter(conn.outputStream)
+                    wr.write(jsonRoot.toString())
+                    wr.flush()
 
-            val status = conn.responseCode
-
-            if (status == 200) {
-                val br = BufferedReader(InputStreamReader(conn.inputStream))
-                var s = ""
-                while (br.ready()) s += br.readLine()
-                val json = Json(s)
-                if (json.containsKey("errors")) {
-                    val jsons = json.getJsonArray("errors")!!
-                    for (i in 0 until jsons.size()) {
-                        val j = jsons.getJson(i)
-                        if (j.containsKey("token") && j.containsKey("error") && j.getString("error").startsWith("bad registration id data: ")) {
-                            onTokenNotFound!!.invoke(j.getString("token"))
+                    val status = conn.responseCode
+                    if (status == 200) {
+                        val br = BufferedReader(InputStreamReader(conn.inputStream))
+                        var s = ""
+                        while (br.ready()) s += br.readLine()
+                        val json = Json(s)
+                        if (json.containsKey("errors")) {
+                            val jsons = json.getJsonArray("errors")!!
+                            for (i in 0 until jsons.size()) {
+                                val j = jsons.getJson(i)
+                                if (j.containsKey("token") && j.containsKey("error") && j.getString("error").startsWith("bad registration id data: ")) {
+                                    onTokenNotFound!!.invoke(j.getString("token"))
+                                }
+                            }
+                        } else if (json.containsKey("results")) {
+                            val jsons = json.getJsonArray("results")!!
+                            for (i in 0 until jsons.size()) {
+                                val j = jsons.getJson(i)
+                                if (j.containsKey("error") && j.getString("error", "") == "NotRegistered") {
+                                    onTokenNotFound!!.invoke(tokens[i])
+                                }
+                            }
                         }
+                    } else {
+                        if (category.key == "fcm") info("Google notification sending error. code = $status")
+                        else info("${category.key} notification sending error. code = $status")
+                        val br = BufferedReader(InputStreamReader(conn.errorStream))
+                        while (br.ready()) info(br.readLine())
                     }
-                } else if (json.containsKey("results")) {
-                    val jsons = json.getJsonArray("results")!!
-                    for (i in 0 until jsons.size()) {
-                        val j = jsons.getJson(i)
-                        if (j.containsKey("error") && j.getString("error", "") == "NotRegistered") {
-                            onTokenNotFound!!.invoke(tokens[i])
-                        }
-                    }
+                } catch (ex: Exception) {
+                    err(ex)
+                    continue
                 }
-            } else {
-                info("Google notification sending error. code = $status")
-                val br = BufferedReader(InputStreamReader(conn.errorStream))
-                while (br.ready()) info(br.readLine())
-
             }
-
         } catch (ex: IOException) {
             err(ex)
         }
