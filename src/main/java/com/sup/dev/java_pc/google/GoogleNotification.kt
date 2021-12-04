@@ -11,14 +11,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object GoogleNotification {
-    private val allowedCustomEndpoints = listOf("https://push.33rd.dev/push")
+    private var allowedCustomEndpoints = emptyArray<String>()
 
     private var onTokenNotFound: ((String) -> Unit)? = null
     private var apiKey: String? = null
     private val executePacks = ArrayList<Item2<String, Array<String>>>()
 
-    fun init(apiKey: String) {
+    fun init(apiKey: String, allowedCustomEndpoints:Array<String> = emptyArray()) {
         GoogleNotification.apiKey = apiKey
+        GoogleNotification.allowedCustomEndpoints = allowedCustomEndpoints
         ToolsThreads.thread {
             while (true){
                 if (executePacks.isEmpty()) ToolsThreads.sleep(1000)
