@@ -11,7 +11,7 @@ class DatabaseInstance(
         private val login: String,
         private val pass: String,
         private val base: String,
-        private val mysql_url: String
+        private val postgres_url: String
 ) {
 
     var RETRY_COUNT = 5
@@ -27,14 +27,7 @@ class DatabaseInstance(
         synchronized(this) {
             if (this.databaseKey != databaseKey) return
             this.databaseKey = System.currentTimeMillis()
-            Class.forName("com.mysql.jdbc.Driver").newInstance()
-            connection = DriverManager.getConnection("jdbc:mysql://$mysql_url/$base", login, pass)
-            execute("SET GLOBAL connect_timeout=1000000")
-            execute("SET GLOBAL wait_timeout=1000000")
-            execute("SET GLOBAL interactive_timeout=1000000")
-            execute("SET NAMES utf8mb4")
-            execute("SET CHARACTER SET utf8mb4")
-            execute("SET character_set_connection=utf8mb4")
+            connection = DriverManager.getConnection("jdbc:postgresql://$postgres_url/$base?useSSL=false", login, pass)
         }
     }
 
