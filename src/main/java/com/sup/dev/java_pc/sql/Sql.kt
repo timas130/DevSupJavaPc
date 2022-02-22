@@ -2,23 +2,23 @@ package com.sup.dev.java_pc.sql
 
 
 object Sql {
-
-    val INSERT = "INSERT INTO "
-    val DELETE = "DELETE FROM "
-    val UPDATE = "UPDATE "
-    val SET = " SET "
-    val VALUES = " VALUES "
-    val WHERE = " WHERE "
-    val DISTINCT = "DISTINCT "
-    val LIKE = " LIKE(?) "
-    val SELECT = "SELECT "
-    val COUNT = " COUNT(*) "
-    val FROM = " FROM "
-    val ORDER = " ORDER BY "
-    val GROUP = " GROUP BY "
-    val LIMIT = " LIMIT "
-    val ASC = " ASC "
-    val DESC = " DESC "
+    const val INSERT = "INSERT INTO "
+    const val DELETE = "DELETE FROM "
+    const val UPDATE = "UPDATE "
+    const val SET = " SET "
+    const val VALUES = " VALUES "
+    const val WHERE = " WHERE "
+    const val DISTINCT = "DISTINCT "
+    const val LIKE = " LIKE(?) "
+    const val SELECT = "SELECT "
+    const val COUNT = " COUNT(*) "
+    const val FROM = " FROM "
+    const val ORDER = " ORDER BY "
+    const val GROUP = " GROUP BY "
+    const val LIMIT = " LIMIT "
+    const val OFFSET = " OFFSET "
+    const val ASC = " ASC "
+    const val DESC = " DESC "
 
     fun prepareColumns(vararg columns: String): String {
         if (columns.isEmpty())
@@ -54,11 +54,15 @@ object Sql {
     }
 
     fun IF(param: Any, condition: Any, value: Any, ret1: Any, ret2: Any): String {
-        return " IF(($param) $condition ($value),($ret1),($ret2))"
+        return " (CASE WHEN ($param) $condition ($value) THEN (" +
+                   "${ret1.takeUnless { it is String && it.isEmpty() } ?: "''"}" +
+               ") ELSE (" +
+                   "${ret2.takeUnless { it is String && it.isEmpty() } ?: "''"}" +
+               ") END)"
     }
 
     fun IFNULL(param: Any, ret: Any): String {
-        return " IFNULL(($param),($ret))"
+        return " COALESCE(($param),($ret))"
     }
 
 
@@ -66,21 +70,21 @@ object Sql {
         val s = StringBuilder(" CONCAT(" + params[0])
         for (i in 1 until params.size)
             s.append(",").append(params[i])
-        return s.toString() + ")"
+        return "$s)"
     }
 
     fun IN(vararg params: Any): String {
         val s = StringBuilder(" IN(" + params[0])
         for (i in 1 until params.size)
             s.append(",").append(params[i])
-        return s.toString() + ")"
+        return "$s)"
     }
 
     fun IN(vararg params: Long): String {
         val s = StringBuilder(" IN(" + params[0])
         for (i in 1 until params.size)
             s.append(",").append(params[i])
-        return s.toString() + ")"
+        return "$s)"
     }
 
     fun increment(column: String): String {

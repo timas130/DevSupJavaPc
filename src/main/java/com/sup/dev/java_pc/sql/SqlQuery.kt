@@ -1,7 +1,5 @@
 package com.sup.dev.java_pc.sql
 
-import java.util.ArrayList
-
 
 abstract class SqlQuery{
 
@@ -26,6 +24,7 @@ abstract class SqlQuery{
     fun getQuery(): String? {
         if (query == null)
             query = createQuery()
+        System.err.println("Query $query")
         return query
     }
 
