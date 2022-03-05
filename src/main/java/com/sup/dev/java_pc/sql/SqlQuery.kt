@@ -24,7 +24,6 @@ abstract class SqlQuery{
     fun getQuery(): String? {
         if (query == null)
             query = createQuery()
-        System.err.println("Query $query")
         return query
     }
 

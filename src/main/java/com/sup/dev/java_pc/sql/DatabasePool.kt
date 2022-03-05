@@ -2,7 +2,6 @@ package com.sup.dev.java_pc.sql
 
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsThreads
-import java.lang.RuntimeException
 
 class DatabasePool(
         login: String,
@@ -10,6 +9,7 @@ class DatabasePool(
         base: String,
         mysql_url: String,
         poolSize: Int,
+        oldMysql: Boolean = false,
         private var statisticCollector: (String, Long) -> Unit  = { tag, time -> }
 ) {
 
@@ -17,7 +17,7 @@ class DatabasePool(
 
     init{
         for (i in 0 until poolSize) {
-            pool.add(Item2(DatabaseInstance(login, pass, base, mysql_url), false))
+            pool.add(Item2(DatabaseInstance(login, pass, base, mysql_url, oldMysql), false))
         }
     }
 
