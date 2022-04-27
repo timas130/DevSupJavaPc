@@ -1,9 +1,5 @@
 package com.sup.dev.java_pc.sql
 
-import com.sup.dev.java.tools.ToolsMapper
-import java.util.*
-import kotlin.collections.ArrayList
-
 
 class SqlWhere {
 
@@ -31,15 +27,12 @@ class SqlWhere {
 
     internal fun toQuery(useLink: Boolean): String {
         if (!used) return ""
-        val s: StringBuilder
-        if (useLink)
-            s = StringBuilder(link!!)
-        else
-            s = StringBuilder()
+        val s: StringBuilder = if (useLink) StringBuilder(link!!)
+        else StringBuilder()
         s.append("(").append(wheres[0].toQuery())
         for (i in 1 until wheres.size)
             s.append(" ").append(wheres[i - 1].link).append(" ").append(wheres[i].toQuery())
-        return s.toString() + ")"
+        return "$s)"
     }
 
     //

@@ -1,7 +1,5 @@
 package com.sup.dev.java_pc.sql
 
-import java.util.ArrayList
-
 
 abstract class SqlQuery{
 

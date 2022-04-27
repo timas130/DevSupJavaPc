@@ -1,7 +1,5 @@
 package com.sup.dev.java_pc.sql
 
-import java.util.*
-
 
 class SqlQuerySelect : SqlQueryWithWhere {
 
@@ -144,7 +142,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
         sql += where
         if (groupColumn != null) sql += Sql.GROUP + groupColumn!!
         if (sortColumn != null) sql += Sql.ORDER + sortColumn + if (sortAB) Sql.ASC else Sql.DESC + if (sortColumnSecond != null) ", $sortColumnSecond" else ""
-        if (limited) sql += Sql.LIMIT + limited_offset + "," + limited_count
+        if (limited) sql += Sql.LIMIT + limited_count + Sql.OFFSET + limited_offset
 
         return sql
     }

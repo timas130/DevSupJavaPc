@@ -3,7 +3,6 @@ package com.sup.dev.java_pc.sql
 import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.ArrayList
 
 
 class PreparedQuery(
@@ -41,20 +40,16 @@ class PreparedQuery(
 
     @Throws(SQLException::class)
     fun setParam(index: Int, value: Any?) {
-        if (value == null)
-            statement.setNull(index, java.sql.Types.NULL)
-        else if (value is ByteArray)
-            statement.setBytes(index, value as ByteArray?)
-        else if (value is Int)
-            statement.setInt(index, value)
-        else if (value is Long)
-            statement.setLong(index, value)
-        else if (value is Double)
-            statement.setDouble(index, value)
-        else if (value is Float)
-            statement.setFloat(index, value)
-        else
-            statement.setString(index, value.toString())
+        when (value) {
+            null -> statement.setNull(index, java.sql.Types.NULL)
+            is ByteArray -> statement.setBytes(index, value as ByteArray?)
+            is Int -> statement.setInt(index, value)
+            is Long -> statement.setLong(index, value)
+            is Double -> statement.setDouble(index, value)
+            is Float -> statement.setFloat(index, value)
+            is Boolean -> statement.setBoolean(index, value)
+            else -> statement.setString(index, value.toString())
+        }
     }
 
     fun closeIfNeed() {
