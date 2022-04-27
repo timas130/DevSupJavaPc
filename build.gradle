@@ -3,6 +3,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'org.postgresql:postgresql:42.3.2'
     implementation project(':DevSupJava')
 }
 
