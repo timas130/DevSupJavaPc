@@ -87,6 +87,8 @@ object Sql {
         return "$s)"
     }
 
+    fun LOWER(param: Any): String = "LOWER($param)"
+
     fun increment(column: String): String {
         return "$column=$column+1"
     }

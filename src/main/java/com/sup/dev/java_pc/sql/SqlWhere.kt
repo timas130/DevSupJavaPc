@@ -59,10 +59,14 @@ class SqlWhere {
         }
     }
 
-    class WhereLIKE constructor(private val column: String, link: String = "AND") : Where(link) {
+    class WhereLIKE constructor(
+        private val column: String,
+        private val caseSensitive: Boolean = true,
+        link: String = "AND",
+    ) : Where(link) {
 
         override fun toQuery(): String {
-            return "$column LIKE(?)"
+            return if (caseSensitive) "$column LIKE(?)" else "${Sql.LOWER(column)} LIKE (?)"
         }
     }
 
