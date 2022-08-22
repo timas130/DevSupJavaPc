@@ -4,6 +4,7 @@ import com.sup.dev.java.classes.collections.Cash
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.http_api.HttpRequest
 import com.sup.dev.java.libs.json.Json
+import com.sup.dev.java.libs.json.JsonParsable
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -11,31 +12,38 @@ import java.net.URL
 import java.nio.charset.Charset
 
 object GoogleAuth {
-
-    private var serverClientId = ""
-    private var serverClientSecret = ""
-    private var cash: Cash<String, String> = Cash(10000)
-
-    fun init(serverClientId: String, serverClientSecret: String) {
-        GoogleAuth.serverClientId = serverClientId
-        GoogleAuth.serverClientSecret = serverClientSecret
+    class GoogleAuthCreds(var clientId: String, var clientSecret: String) : JsonParsable {
+        override fun json(inp: Boolean, json: Json): Json {
+            clientId = json.m(inp, "client_id", clientId)
+            clientSecret = json.m(inp, "secret", clientSecret)
+            return json
+        }
     }
 
-    fun getGoogleId(token: String): String? {
+    private lateinit var creds: Array<GoogleAuthCreds>
+    private var cash: Cash<String, String> = Cash(10000)
 
+    @Deprecated("use init(Array<GoogleAuth.GoogleAuthCreds>)")
+    fun init(serverClientId: String, serverClientSecret: String) {
+        creds = arrayOf(GoogleAuthCreds(serverClientId, serverClientSecret))
+    }
+
+    fun init(creds: Array<GoogleAuthCreds>) {
+        this.creds = creds
+    }
+
+    fun getGoogleId(token: String, clientIndex: Int = 0): String? {
         var googleId = cash[token]
         if (googleId != null) return googleId
 
-        googleId = if (token.startsWith("4/")) requestByIdServerAuthCode(token)
-        else requestByIdToken(token)
+        googleId = if (token.startsWith("4/")) requestByIdServerAuthCode(token, clientIndex)
+        else requestByIdToken(token, clientIndex)
 
         cash.put(token, googleId)
         return googleId
-
-
     }
 
-    private fun requestByIdServerAuthCode(token: String): String? {
+    private fun requestByIdServerAuthCode(token: String, clientIndex: Int = 0): String? {
         try {
             val result = HttpRequest()
                     .setUrl("https://www.googleapis.com/oauth2/v4/token")
@@ -43,8 +51,8 @@ object GoogleAuth {
                     .setMethods(HttpRequest.Method.POST)
                     .setJson(Json()
                             .put("grant_type", "authorization_code")
-                            .put("client_id", serverClientId)
-                            .put("client_secret", serverClientSecret)
+                            .put("client_id", creds[clientIndex].clientId)
+                            .put("client_secret", creds[clientIndex].clientSecret)
                             .put("code", token)
                     )
                     .makeNow()
@@ -60,7 +68,7 @@ object GoogleAuth {
 
     }
 
-    private fun requestByIdToken(token: String): String? {
+    private fun requestByIdToken(token: String, clientIndex: Int = 0): String? {
         var inp: BufferedReader? = null
         try {
             inp = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
