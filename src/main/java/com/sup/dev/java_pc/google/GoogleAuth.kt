@@ -12,7 +12,7 @@ import java.net.URL
 import java.nio.charset.Charset
 
 object GoogleAuth {
-    class GoogleAuthCreds(var clientId: String, var clientSecret: String) : JsonParsable {
+    class GoogleAuthCreds(var clientId: String = "", var clientSecret: String = "") : JsonParsable {
         override fun json(inp: Boolean, json: Json): Json {
             clientId = json.m(inp, "client_id", clientId)
             clientSecret = json.m(inp, "secret", clientSecret)
