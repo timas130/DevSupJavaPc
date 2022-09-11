@@ -37,7 +37,7 @@ object GoogleAuth {
         if (googleId != null) return googleId
 
         googleId = if (token.startsWith("4/")) requestByIdServerAuthCode(token, clientIndex)
-        else requestByIdToken(token, clientIndex)
+        else requestByIdToken(token)
 
         cash.put(token, googleId)
         return googleId
@@ -68,7 +68,7 @@ object GoogleAuth {
 
     }
 
-    private fun requestByIdToken(token: String, clientIndex: Int = 0): String? {
+    private fun requestByIdToken(token: String): String? {
         var inp: BufferedReader? = null
         try {
             inp = BufferedReader(InputStreamReader(URL("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$token").openConnection().getInputStream(), Charset.forName("UTF-8")))
@@ -77,7 +77,13 @@ object GoogleAuth {
 
             val json = Json(s)
             if (!json.containsKey("sub")) return null
+            if (!json.containsKey("azp")) return null
             val googleId = json.getString("sub")
+            val azp = json.getString("azp")
+            if (!creds.any { it.clientId == azp }) {
+                err("[GoogleAuth] azp mismatch! recv: $azp")
+                return null
+            }
 
             return googleId
         } catch (e: Exception) {
