@@ -10,7 +10,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
-import java.util.ArrayList
+import java.util.*
 
 
 class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List<K>? = null) : ZField(w), KeyListener, FocusListener {
@@ -101,7 +101,7 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
         selected.clear()
 
         for (v in values)
-            if (v.a1.toLowerCase().startsWith(text.toLowerCase()))
+            if (v.a1.lowercase(Locale.getDefault()).startsWith(text.lowercase(Locale.getDefault())))
                 selected.add(v)
 
         val added = selected.size
@@ -114,9 +114,9 @@ class ZFieldSelect<K> @JvmOverloads constructor(w: Int = GUI.S_256, values: List
             })
 
         for (v in values)
-            if (v.a1.toLowerCase().contains(text.toLowerCase())
-                    && v.a1.length >= text.length
-                    && !selected.contains(v))
+            if (v.a1.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))
+                && v.a1.length >= text.length
+                && !selected.contains(v))
                 selected.add(v)
 
         for (i in added until selected.size)
