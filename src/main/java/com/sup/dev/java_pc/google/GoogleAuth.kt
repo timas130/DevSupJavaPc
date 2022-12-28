@@ -77,11 +77,11 @@ object GoogleAuth {
 
             val json = Json(s)
             if (!json.containsKey("sub")) return null
-            if (!json.containsKey("azp")) return null
+            if (!json.containsKey("aud")) return null
             val googleId = json.getString("sub")
-            val azp = json.getString("azp")
-            if (!creds.any { it.clientId == azp }) {
-                err("[GoogleAuth] azp mismatch! recv: $azp")
+            val aud = json.getString("aud")
+            if (!creds.any { it.clientId == aud }) {
+                err("[GoogleAuth] aud mismatch! recv: $aud")
                 return null
             }
 
